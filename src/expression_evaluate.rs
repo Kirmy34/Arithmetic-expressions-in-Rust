@@ -5,6 +5,14 @@ impl Expression {
         match self {
             Self::Zero => Some(Ok(0)),
             Self::One => Some(Ok(1)),
+            Self::Two => Some(Ok(2)),
+            Self::Three => Some(Ok(3)),
+            Self::Four => Some(Ok(4)),
+            Self::Five => Some(Ok(5)),
+            Self::Six => Some(Ok(6)),
+            Self::Seven => Some(Ok(7)),
+            Self::Eight => Some(Ok(8)),
+            Self::Nine => Some(Ok(9)),
             Self::ETrue => Some(Err(true)),
             Self::EFalse => Some(Err(false)),
             Self::Plus(left, right) => {

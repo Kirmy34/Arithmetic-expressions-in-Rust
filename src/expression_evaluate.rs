@@ -70,4 +70,34 @@ impl Expression {
 #[cfg(test)] // only compile this when running test
 mod test {
     use crate::test_data::*;
+
+    #[test]
+    fn test_show_without_brackets() {
+        assert_eq!(EXPRESSION1.evaluate(), Some(Ok(1)));
+    }
+
+    #[test]
+    fn test_show_with_brackets() {
+        assert_eq!(EXPRESSION2.evaluate(), Some(Ok(0)));
+    }
+
+    #[test]
+    fn test_show_with_logic_ors() {
+        assert_eq!(EXPRESSION3.evaluate(), Some(Err(true)));
+    }
+
+    #[test]
+    fn test_show_with_number_and_logic_parts() {
+        assert_eq!(EXPRESSION4.evaluate(), None);
+    }
+
+    #[test]
+    fn test_show_with_numbers_and_logic() {
+        assert_eq!(EXPRESSION5.evaluate(), None);
+    }
+
+    #[test]
+    fn test_show_with_logic_and_or() {
+        assert_eq!(EXPRESSION6.evaluate(), Some(Err(false)));
+    }
 }

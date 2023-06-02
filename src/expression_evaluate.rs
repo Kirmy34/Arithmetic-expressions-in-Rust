@@ -86,7 +86,7 @@ mod test {
 
     #[test]
     fn test_show_with_brackets() {
-        assert_eq!(EXPRESSION2.evaluate(), Some(Ok(0)));
+        assert_eq!(EXPRESSION2.evaluate(), Some(Ok(20)));
     }
 
     #[test]
@@ -107,5 +107,15 @@ mod test {
     #[test]
     fn test_show_with_logic_and_or() {
         assert_eq!(EXPRESSION6.evaluate(), Some(Err(false)));
+    }
+
+    #[test]
+    fn test_show_with_additional_numbers() {
+        assert_eq!(EXPRESSION7.evaluate(), Some(Ok(44)));
+    }
+
+    #[test]
+    fn test_show_with_more_numbers() {
+        assert_eq!(EXPRESSION8.evaluate(), Some(Ok(47)));
     }
 }

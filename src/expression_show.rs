@@ -34,7 +34,7 @@ mod test {
 
     #[test]
     fn test_show_with_brackets() {
-        assert_eq!(EXPRESSION2.show(), "0 * (0 + 1)");
+        assert_eq!(EXPRESSION2.show(), "5 * (3 + 1)");
     }
 
     #[test]
@@ -56,5 +56,15 @@ mod test {
     // #[should_panic] // if we expect a test to fail.
     fn test_show_with_logic_and_or() {
         assert_eq!(EXPRESSION6.show(), "(false || (true && false))");
+    }
+
+    #[test]
+    fn test_show_with_additional_numbers() {
+        assert_eq!(EXPRESSION7.show(), "4 * (2 + 9)");
+    }
+
+    #[test]
+    fn test_show_with_more_numbers() {
+        assert_eq!(EXPRESSION8.show(), "(3 * (6 + 7) + 8)");
     }
 }

@@ -47,6 +47,6 @@ mod test {
     #[test]
     // #[should_panic] // if we expect a test to fail.
     fn test_show_with_logic_and_or() {
-        assert_eq!(EXPRESSION6.show(), "(true || (true && false))");
+        assert_eq!(EXPRESSION6.show(), "(false || (true && false))");
     }
 }

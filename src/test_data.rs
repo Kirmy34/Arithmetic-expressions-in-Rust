@@ -10,5 +10,5 @@ lazy_static! {
         pub static ref EXPRESSION3: Expression = EOr(Box::new(ETrue), Box::new(EAnd(Box::new(ETrue), Box::new(EFalse))));
         pub static ref EXPRESSION4: Expression = Mult(Box::new(Zero), Box::new(EOr(Box::new(EFalse), Box::new(ETrue))));
         pub static ref EXPRESSION5: Expression = Mult(Box::new(Zero), Box::new(EOr(Box::new(Zero), Box::new(One))));
-        pub static ref EXPRESSION6: Expression = EOr(Box::new(ETrue), Box::new(EAnd(Box::new(ETrue), Box::new(EFalse))));
+        pub static ref EXPRESSION6: Expression = EOr(Box::new(EFalse), Box::new(EAnd(Box::new(ETrue), Box::new(EFalse))));
     }

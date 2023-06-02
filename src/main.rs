@@ -4,6 +4,9 @@ use crate::expression::Expression::*;
 mod expression;
 mod expression_show;
 
+#[cfg(test)]
+mod test_data;
+
 fn main() {
     let expression1: Expression = Plus(Box::new(Mult(Box::new(One), Box::new(Zero))), Box::new(One));
     let expression2: Expression = Mult(Box::new(Zero), Box::new(Plus(Box::new(Zero), Box::new(One))));

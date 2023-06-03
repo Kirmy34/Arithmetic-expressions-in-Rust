@@ -1,21 +1,20 @@
+use crate::example_expressions::ExampleExpressions::*;
 use crate::expression::Expression;
-use crate::expression::Expression::*;
 
 mod expression;
 mod expression_show;
 mod expression_evaluate;
-
-#[cfg(test)]
-mod test_data;
+mod example_expressions;
 
 fn main() {
-    let expression1: Expression = Plus(Box::new(Mult(Box::new(One), Box::new(Zero))), Box::new(One));
-    let expression2: Expression = Mult(Box::new(Five), Box::new(Plus(Box::new(Three), Box::new(One))));
-    let expression3: Expression = EOr(Box::new(ETrue), Box::new(EAnd(Box::new(ETrue), Box::new(EFalse))));
-    let expression4: Expression = Mult(Box::new(Zero), Box::new(EOr(Box::new(EFalse), Box::new(ETrue))));
-    let expression5: Expression = Mult(Box::new(Zero), Box::new(EOr(Box::new(Zero), Box::new(One))));
-    let expression6: Expression = Mult(Box::new(Four), Box::new(Plus(Box::new(Two), Box::new(Nine))));
-    let expression7: Expression = Plus(Box::new(Mult(Box::new(Three), Box::new(Plus(Box::new(Six), Box::new(Seven))))), Box::new(Eight));
+    let expression1: Expression = EXPRESSION1.init();
+    let expression2: Expression = EXPRESSION2.init();
+    let expression3: Expression = EXPRESSION3.init();
+    let expression4: Expression = EXPRESSION4.init();
+    let expression5: Expression = EXPRESSION5.init();
+    let expression6: Expression = EXPRESSION6.init();
+    let expression7: Expression = EXPRESSION7.init();
+    let expression8: Expression = EXPRESSION8.init();
 
     println!("Hello, world!");
     println!("Ausdruck: {}, augewertet: {}", expression1.show(), evaluate_a_given_expression(expression1));
@@ -25,6 +24,7 @@ fn main() {
     println!("Ausdruck: {}, augewertet: {}", expression5.show(), evaluate_a_given_expression(expression5));
     println!("Ausdruck: {}, augewertet: {}", expression6.show(), evaluate_a_given_expression(expression6));
     println!("Ausdruck: {}, augewertet: {}", expression7.show(), evaluate_a_given_expression(expression7));
+    println!("Ausdruck: {}, augewertet: {}", expression8.show(), evaluate_a_given_expression(expression8));
 }
 
 fn evaluate_a_given_expression(expression: Expression) -> String {

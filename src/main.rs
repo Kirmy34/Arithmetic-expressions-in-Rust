@@ -25,13 +25,17 @@ fn main() {
 
     // Evaluate the expressions from console.
     let args: Vec<String> = env::args().collect();
-    println!("Number of arguments: {}", args.len());
+    // println!("Number of arguments: {}", args.len());
     if args.len() > 1 {
         println!("Argument: {}", &args[1]);
         let string_from_console = &args[1];
         let (console_expression, string) = parse_expression_from_console(string_from_console.to_string());
-        println!("Ausdruck: {}, augewertet: {}", console_expression.show(), evaluate_a_given_expression(&console_expression));
-
+        println!(
+            "Ausdruck: {}, typ check: {}, augewertet: {}",
+            console_expression.show(),
+            type_check_a_given_expression(&console_expression),
+            evaluate_a_given_expression(&console_expression)
+        );
     }
 }
 

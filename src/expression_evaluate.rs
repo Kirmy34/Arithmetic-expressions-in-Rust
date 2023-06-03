@@ -77,45 +77,17 @@ impl Expression {
 
 #[cfg(test)] // only compile this when running test
 mod test {
-    use crate::example_expressions::ExampleExpressions::*;
+    use crate::example_expressions::{ExampleExpressions, ExampleExpressionsEvaluateResults};
+    use crate::expression::Expression;
 
     #[test]
-    fn test_show_without_brackets() {
-        assert_eq!(EXPRESSION1.init().evaluate(), Some(Ok(1)));
-    }
-
-    #[test]
-    fn test_show_with_brackets() {
-        assert_eq!(EXPRESSION2.init().evaluate(), Some(Ok(20)));
-    }
-
-    #[test]
-    fn test_show_with_logic_ors() {
-        assert_eq!(EXPRESSION3.init().evaluate(), Some(Err(true)));
-    }
-
-    #[test]
-    fn test_show_with_number_and_logic_parts() {
-        assert_eq!(EXPRESSION4.init().evaluate(), None);
-    }
-
-    #[test]
-    fn test_show_with_numbers_and_logic() {
-        assert_eq!(EXPRESSION5.init().evaluate(), None);
-    }
-
-    #[test]
-    fn test_show_with_logic_and_or() {
-        assert_eq!(EXPRESSION6.init().evaluate(), Some(Err(false)));
-    }
-
-    #[test]
-    fn test_show_with_additional_numbers() {
-        assert_eq!(EXPRESSION7.init().evaluate(), Some(Ok(44)));
-    }
-
-    #[test]
-    fn test_show_with_more_numbers() {
-        assert_eq!(EXPRESSION8.init().evaluate(), Some(Ok(47)));
+    fn run_all_tests() {
+        let results = ExampleExpressions::iterator().zip(ExampleExpressionsEvaluateResults::get_evaluate_values());
+        for (expression, result) in results {
+            let initialized_expression: Expression = expression.init();
+            let initialized_result = result.init();
+            println!("run evaluate test for expression: {}", initialized_expression.show());
+            assert_eq!(initialized_expression.evaluate(), initialized_result);
+        }
     }
 }

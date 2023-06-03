@@ -52,51 +52,17 @@ impl Expression {
 
 #[cfg(test)] // only compile this when running test
 mod test {
-    use crate::example_expressions::ExampleExpressions::*;
+    use crate::example_expressions::{ExampleExpressions, ExampleExpressionsShowResults};
+    use crate::expression::Expression;
 
     #[test]
-    fn test_show_without_brackets() {
-        assert_eq!(EXPRESSION1.init().show(), "1 * 0 + 1");
-    }
-
-    #[test]
-    fn test_show_with_brackets() {
-        assert_eq!(EXPRESSION2.init().show(), "5 * (3 + 1)");
-    }
-
-    #[test]
-    fn test_show_with_logic_ors() {
-        assert_eq!(EXPRESSION3.init().show(), "(true || (true && false))");
-    }
-
-    #[test]
-    fn test_show_with_number_and_logic_parts() {
-        assert_eq!(EXPRESSION4.init().show(), "0 * (false || true)");
-    }
-
-    #[test]
-    fn test_show_with_numbers_and_logic() {
-        assert_eq!(EXPRESSION5.init().show(), "0 * (0 || 1)");
-    }
-
-    #[test]
-    // #[should_panic] // if we expect a test to fail.
-    fn test_show_with_logic_and_or() {
-        assert_eq!(EXPRESSION6.init().show(), "(false || (true && false))");
-    }
-
-    #[test]
-    fn test_show_with_additional_numbers() {
-        assert_eq!(EXPRESSION7.init().show(), "4 * (2 + 9)");
-    }
-
-    #[test]
-    fn test_show_with_more_numbers() {
-        assert_eq!(EXPRESSION8.init().show(), "3 * (6 + 7) + 8");
-    }
-
-    #[test]
-    fn test_show_with_logic_and_numbers() {
-        assert_eq!(EXPRESSION9.init().show(), "(true || 5 + 2)");
+    fn run_all_tests() {
+        let results = ExampleExpressions::iterator().zip(ExampleExpressionsShowResults::get_show_values());
+        for (expression, result) in results {
+            let initialized_expression: Expression = expression.init();
+            let initialized_result = result.init();
+            println!("run show test for expression: {}", initialized_expression.show());
+            assert_eq!(initialized_expression.show(), initialized_result);
+        }
     }
 }

@@ -24,7 +24,7 @@ impl Expression {
                     (Some(Ok(_left_value)), Some(Ok(_right_value))) => Some(Ok(TInt)),
                     (_, _) => None
                 }
-            },
+            }
             Self::Mult(left, right) => {
                 let left_result = left.type_check();
                 let right_result = right.type_check();
@@ -32,7 +32,7 @@ impl Expression {
                     (Some(Ok(_left_value)), Some(Ok(_right_value))) => Some(Ok(TInt)),
                     (_, _) => None
                 }
-            },
+            }
             Self::EOr(left, right) => {
                 let left_result = left.type_check();
                 let right_result = right.type_check();
@@ -40,7 +40,7 @@ impl Expression {
                     (Some(Err(_left_value)), Some(Err(_right_value))) => Some(Err(TBool)),
                     (_, _) => None
                 }
-            },
+            }
             Self::EAnd(left, right) => {
                 let left_result = left.type_check();
                 let right_result = right.type_check();
@@ -48,59 +48,24 @@ impl Expression {
                     (Some(Err(_left_value)), Some(Err(_right_value))) => Some(Err(TBool)),
                     (_, _) => None
                 }
-            },
+            }
         }
     }
 }
 
 #[cfg(test)] // only compile this when running test
 mod test {
-    use crate::data_types::DataTypes::*;
-    use crate::example_expressions::ExampleExpressions::*;
+    use crate::example_expressions::{ExampleExpressions, ExampleExpressionsTypeCheckResults};
+    use crate::expression::Expression;
 
     #[test]
-    fn test_type_check_without_brackets() {
-        assert_eq!(EXPRESSION1.init().type_check(), Some(Ok(TInt)));
-    }
-
-    #[test]
-    fn test_type_check_with_brackets() {
-        assert_eq!(EXPRESSION2.init().type_check(), Some(Ok(TInt)));
-    }
-
-    #[test]
-    fn test_type_check_with_logic_ors() {
-        assert_eq!(EXPRESSION3.init().type_check(), Some(Err(TBool)));
-    }
-
-    #[test]
-    fn test_type_check_with_number_and_logic_parts() {
-        assert_eq!(EXPRESSION4.init().type_check(), None);
-    }
-
-    #[test]
-    fn test_type_check_with_numbers_and_logic() {
-        assert_eq!(EXPRESSION5.init().type_check(), None);
-    }
-
-    #[test]
-    // #[should_panic] // if we expect a test to fail.
-    fn test_type_check_with_logic_and_or() {
-        assert_eq!(EXPRESSION6.init().type_check(), Some(Err(TBool)));
-    }
-
-    #[test]
-    fn test_type_check_with_additional_numbers() {
-        assert_eq!(EXPRESSION7.init().type_check(), Some(Ok(TInt)));
-    }
-
-    #[test]
-    fn test_type_check_with_more_numbers() {
-        assert_eq!(EXPRESSION8.init().type_check(), Some(Ok(TInt)));
-    }
-
-    #[test]
-    fn test_type_check_with_logic_and_numbers() {
-        assert_eq!(EXPRESSION9.init().type_check(), None);
+    fn run_all_tests() {
+        let results = ExampleExpressions::iterator().zip(ExampleExpressionsTypeCheckResults::get_type_check_values());
+        for (expression, result) in results {
+            let initialized_expression: Expression = expression.init();
+            let initialized_result = result.init();
+            println!("run type test for expression: {}", initialized_expression.show());
+            assert_eq!(initialized_expression.type_check(), initialized_result);
+        }
     }
 }

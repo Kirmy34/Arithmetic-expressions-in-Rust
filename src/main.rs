@@ -17,34 +17,20 @@ fn main() {
     let expression6: Expression = Mult(Box::new(Four), Box::new(Plus(Box::new(Two), Box::new(Nine))));
     let expression7: Expression = Plus(Box::new(Mult(Box::new(Three), Box::new(Plus(Box::new(Six), Box::new(Seven))))), Box::new(Eight));
 
-    let actual_value_2: String = match expression2.evaluate() {
-        None => String::from("incompatible Types"),
-        Some(Ok(value)) => value.to_string(),
-        Some(Err(value)) => value.to_string(),
-    };
-
-    let actual_value_3: String = match expression3.evaluate() {
-        None => String::from("incompatible Types"),
-        Some(Ok(value)) => value.to_string(),
-        Some(Err(value)) => value.to_string(),
-    };
-
-    let actual_value_7: String = match expression7.evaluate() {
-        None => String::from("incompatible Types"),
-        Some(Ok(value)) => value.to_string(),
-        Some(Err(value)) => value.to_string(),
-    };
-
     println!("Hello, world!");
-    println!("{}", expression1.show());
-    println!("{}", expression2.show());
-    println!("{}", expression3.show());
-    println!("{}", expression4.show());
-    println!("{}", expression5.show());
-    println!("{}", expression6.show());
-    println!("{}", expression7.show());
+    println!("Ausdruck: {}, augewertet: {}", expression1.show(), evaluate_a_given_expression(expression1));
+    println!("Ausdruck: {}, augewertet: {}", expression2.show(), evaluate_a_given_expression(expression2));
+    println!("Ausdruck: {}, augewertet: {}", expression3.show(), evaluate_a_given_expression(expression3));
+    println!("Ausdruck: {}, augewertet: {}", expression4.show(), evaluate_a_given_expression(expression4));
+    println!("Ausdruck: {}, augewertet: {}", expression5.show(), evaluate_a_given_expression(expression5));
+    println!("Ausdruck: {}, augewertet: {}", expression6.show(), evaluate_a_given_expression(expression6));
+    println!("Ausdruck: {}, augewertet: {}", expression7.show(), evaluate_a_given_expression(expression7));
+}
 
-    println!("test: {}", actual_value_2);
-    println!("test: {}", actual_value_3);
-    println!("test: {}", actual_value_7);
+fn evaluate_a_given_expression(expression: Expression) -> String {
+    match expression.evaluate() {
+        None => String::from("incompatible Types"),
+        Some(Ok(value)) => value.to_string(),
+        Some(Err(value)) => value.to_string()
+    }
 }

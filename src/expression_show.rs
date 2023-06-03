@@ -94,4 +94,9 @@ mod test {
     fn test_show_with_more_numbers() {
         assert_eq!(EXPRESSION8.init().show(), "3 * (6 + 7) + 8");
     }
+
+    #[test]
+    fn test_show_with_logic_and_numbers() {
+        assert_eq!(EXPRESSION9.init().show(), "(true || 5 + 2)");
+    }
 }

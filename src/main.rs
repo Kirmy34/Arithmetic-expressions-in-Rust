@@ -5,6 +5,9 @@ mod expression;
 mod expression_show;
 mod expression_evaluate;
 mod example_expressions;
+mod expression_type_check;
+mod data_types_show;
+mod data_types;
 
 fn main() {
     let expression1: Expression = EXPRESSION1.init();
@@ -15,22 +18,32 @@ fn main() {
     let expression6: Expression = EXPRESSION6.init();
     let expression7: Expression = EXPRESSION7.init();
     let expression8: Expression = EXPRESSION8.init();
+    let expression9: Expression = EXPRESSION9.init();
 
     println!("Hello, world!");
-    println!("Ausdruck: {}, augewertet: {}", expression1.show(), evaluate_a_given_expression(expression1));
-    println!("Ausdruck: {}, augewertet: {}", expression2.show(), evaluate_a_given_expression(expression2));
-    println!("Ausdruck: {}, augewertet: {}", expression3.show(), evaluate_a_given_expression(expression3));
-    println!("Ausdruck: {}, augewertet: {}", expression4.show(), evaluate_a_given_expression(expression4));
-    println!("Ausdruck: {}, augewertet: {}", expression5.show(), evaluate_a_given_expression(expression5));
-    println!("Ausdruck: {}, augewertet: {}", expression6.show(), evaluate_a_given_expression(expression6));
-    println!("Ausdruck: {}, augewertet: {}", expression7.show(), evaluate_a_given_expression(expression7));
-    println!("Ausdruck: {}, augewertet: {}", expression8.show(), evaluate_a_given_expression(expression8));
+    println!("Ausdruck: {}, typ check: {}, ausgewertet: {}", expression1.show(), type_check_a_given_expression(&expression1), evaluate_a_given_expression(&expression1));
+    println!("Ausdruck: {}, typ check: {}, ausgewertet: {}", expression2.show(), type_check_a_given_expression(&expression2), evaluate_a_given_expression(&expression2));
+    println!("Ausdruck: {}, typ check: {}, ausgewertet: {}", expression3.show(), type_check_a_given_expression(&expression3), evaluate_a_given_expression(&expression3));
+    println!("Ausdruck: {}, typ check: {}, ausgewertet: {}", expression4.show(), type_check_a_given_expression(&expression4), evaluate_a_given_expression(&expression4));
+    println!("Ausdruck: {}, typ check: {}, ausgewertet: {}", expression5.show(), type_check_a_given_expression(&expression5), evaluate_a_given_expression(&expression5));
+    println!("Ausdruck: {}, typ check: {}, ausgewertet: {}", expression6.show(), type_check_a_given_expression(&expression6), evaluate_a_given_expression(&expression6));
+    println!("Ausdruck: {}, typ check: {}, ausgewertet: {}", expression7.show(), type_check_a_given_expression(&expression7), evaluate_a_given_expression(&expression7));
+    println!("Ausdruck: {}, typ check: {}, ausgewertet: {}", expression8.show(), type_check_a_given_expression(&expression8), evaluate_a_given_expression(&expression8));
+    println!("Ausdruck: {}, typ check: {}, ausgewertet: {}", expression9.show(), type_check_a_given_expression(&expression9), evaluate_a_given_expression(&expression9));
 }
 
-fn evaluate_a_given_expression(expression: Expression) -> String {
+fn evaluate_a_given_expression(expression: &Expression) -> String {
     match expression.evaluate() {
         None => String::from("incompatible Types"),
         Some(Ok(value)) => value.to_string(),
         Some(Err(value)) => value.to_string()
+    }
+}
+
+fn type_check_a_given_expression(expression: &Expression) -> String {
+    match expression.type_check() {
+        None => String::from("inkompatibel"),
+        Some(Ok(value)) => value.show(),
+        Some(Err(value)) => value.show()
     }
 }

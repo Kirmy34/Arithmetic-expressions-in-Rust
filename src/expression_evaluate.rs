@@ -80,42 +80,47 @@ mod test {
     use crate::example_expressions::ExampleExpressions::*;
 
     #[test]
-    fn test_show_without_brackets() {
+    fn test_evaluate_without_brackets() {
         assert_eq!(EXPRESSION1.init().evaluate(), Some(Ok(1)));
     }
 
     #[test]
-    fn test_show_with_brackets() {
+    fn test_evaluate_with_brackets() {
         assert_eq!(EXPRESSION2.init().evaluate(), Some(Ok(20)));
     }
 
     #[test]
-    fn test_show_with_logic_ors() {
+    fn test_evaluate_with_logic_ors() {
         assert_eq!(EXPRESSION3.init().evaluate(), Some(Err(true)));
     }
 
     #[test]
-    fn test_show_with_number_and_logic_parts() {
+    fn test_evaluate_with_number_and_logic_parts() {
         assert_eq!(EXPRESSION4.init().evaluate(), None);
     }
 
     #[test]
-    fn test_show_with_numbers_and_logic() {
+    fn test_evaluate_with_numbers_and_logic() {
         assert_eq!(EXPRESSION5.init().evaluate(), None);
     }
 
     #[test]
-    fn test_show_with_logic_and_or() {
+    fn test_evaluate_with_logic_and_or() {
         assert_eq!(EXPRESSION6.init().evaluate(), Some(Err(false)));
     }
 
     #[test]
-    fn test_show_with_additional_numbers() {
+    fn test_evaluate_with_additional_numbers() {
         assert_eq!(EXPRESSION7.init().evaluate(), Some(Ok(44)));
     }
 
     #[test]
-    fn test_show_with_more_numbers() {
+    fn test_evaluate_with_more_numbers() {
         assert_eq!(EXPRESSION8.init().evaluate(), Some(Ok(47)));
+    }
+
+    #[test]
+    fn test_evaluate_with_logic_and_numbers() {
+        assert_eq!(EXPRESSION9.init().evaluate(), Some(Err(true)));
     }
 }

@@ -10,6 +10,7 @@ pub enum ExampleExpressions {
     EXPRESSION6,
     EXPRESSION7,
     EXPRESSION8,
+    EXPRESSION9,
 }
 
 impl ExampleExpressions {
@@ -23,6 +24,7 @@ impl ExampleExpressions {
                 ExampleExpressions::EXPRESSION6 => EOr(Box::new(EFalse), Box::new(EAnd(Box::new(ETrue), Box::new(EFalse)))),
                 ExampleExpressions::EXPRESSION7 => Mult(Box::new(Four), Box::new(Plus(Box::new(Two), Box::new(Nine)))),
                 ExampleExpressions::EXPRESSION8 => Plus(Box::new(Mult(Box::new(Three), Box::new(Plus(Box::new(Six), Box::new(Seven))))), Box::new(Eight)),
+                ExampleExpressions::EXPRESSION9 => EOr(Box::new(ETrue), Box::new(Plus(Box::new(Five), Box::new(Two)))),
         }
     }
 }

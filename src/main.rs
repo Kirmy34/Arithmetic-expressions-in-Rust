@@ -2,6 +2,7 @@ use std::env;
 
 use crate::example_expressions::ExampleExpressions;
 use crate::expression::Expression;
+use crate::expression::Expression::*;
 
 mod expression;
 mod expression_show;
@@ -25,10 +26,13 @@ fn main() {
     // Evaluate the expressions from console.
     let args: Vec<String> = env::args().collect();
     println!("Number of arguments: {}", args.len());
-    println!("Argument: {}", &args[1]);
-    let string_from_console = &args[1];
-    let (console_expression, string) = parse_expression_from_console(string_from_console.to_string());
-    println!("Ausdruck: {}, augewertet: {}", console_expression.show(), evaluate_a_given_expression(console_expression));
+    if args.len() > 1 {
+        println!("Argument: {}", &args[1]);
+        let string_from_console = &args[1];
+        let (console_expression, string) = parse_expression_from_console(string_from_console.to_string());
+        println!("Ausdruck: {}, augewertet: {}", console_expression.show(), evaluate_a_given_expression(&console_expression));
+
+    }
 }
 
 fn evaluate_a_given_expression(expression: &Expression) -> String {
@@ -48,7 +52,7 @@ fn type_check_a_given_expression(expression: &Expression) -> String {
 }
 
 fn parse_expression_from_console(expression_str: String) -> (Expression, String) {
-    println!("{}", expression_str);
+    // println!("{}", expression_str); // debug statement??
     for character in expression_str.chars() {
         return match character {
             '(' => {

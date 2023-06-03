@@ -1,16 +1,4 @@
 pub enum Expression {
-    Numbers(Numbers),
-    BoolExpressions(BoolExpressions),
-    Functions(Functions)
-}
-
-#[derive(Debug, PartialEq)]
-pub enum BoolExpressions {
-    ETrue,
-    EFalse
-}
-
-pub enum Numbers {
     One,
     Zero,
     Two,
@@ -20,12 +8,11 @@ pub enum Numbers {
     Six,
     Seven,
     Eight,
-    Nine
-}
-
-pub enum Functions {
+    Nine,
+    ETrue,
+    EFalse,
     Plus(Box<Expression>, Box<Expression>),
     Mult(Box<Expression>, Box<Expression>),
     EOr(Box<Expression>, Box<Expression>),
-    EAnd(Box<Expression>, Box<Expression>)
+    EAnd(Box<Expression>, Box<Expression>),
 }

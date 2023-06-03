@@ -1,8 +1,5 @@
-use crate::expression::BoolExpressions::*;
 use crate::expression::Expression;
 use crate::expression::Expression::*;
-use crate::expression::Functions::*;
-use crate::expression::Numbers::*;
 
 mod expression;
 mod expression_show;
@@ -12,28 +9,42 @@ mod expression_evaluate;
 mod test_data;
 
 fn main() {
-    let expression1: Expression = Functions(Plus(Box::new(Functions(Mult(Box::new(Numbers(One)), Box::new(Numbers(Zero))))), Box::new(Numbers(One))));
-    let expression2: Expression = Functions(Mult(Box::new(Numbers(Five)), Box::new(Functions(Plus(Box::new(Numbers(Three)), Box::new(Numbers(One)))))));
-    let expression3: Expression = Functions(EOr(Box::new(BoolExpressions(ETrue)), Box::new(Functions(EAnd(Box::new(BoolExpressions(ETrue)), Box::new(BoolExpressions(EFalse)))))));
-    let expression4: Expression = Functions(Mult(Box::new(Numbers(Zero)), Box::new(Functions(EOr(Box::new(BoolExpressions(EFalse)), Box::new(BoolExpressions(ETrue)))))));
-    let expression5: Expression = Functions(Mult(Box::new(Numbers(Zero)), Box::new(Functions(EOr(Box::new(Numbers(Zero)), Box::new(Numbers(One)))))));
-    let expression6: Expression = Functions(Mult(Box::new(Numbers(Four)), Box::new(Functions(Plus(Box::new(Numbers(Two)), Box::new(Numbers(Nine)))))));
-    let expression7: Expression = Functions(Plus(Box::new(Functions(Mult(Box::new(Numbers(Three)), Box::new(Functions(Plus(Box::new(Numbers(Six)), Box::new(Numbers(Seven)))))))), Box::new(Numbers(Eight))));
+    let expression1: Expression = Plus(Box::new(Mult(Box::new(One), Box::new(Zero))), Box::new(One));
+    let expression2: Expression = Mult(Box::new(Five), Box::new(Plus(Box::new(Three), Box::new(One))));
+    let expression3: Expression = EOr(Box::new(ETrue), Box::new(EAnd(Box::new(ETrue), Box::new(EFalse))));
+    let expression4: Expression = Mult(Box::new(Zero), Box::new(EOr(Box::new(EFalse), Box::new(ETrue))));
+    let expression5: Expression = Mult(Box::new(Zero), Box::new(EOr(Box::new(Zero), Box::new(One))));
+    let expression6: Expression = Mult(Box::new(Four), Box::new(Plus(Box::new(Two), Box::new(Nine))));
+    let expression7: Expression = Plus(Box::new(Mult(Box::new(Three), Box::new(Plus(Box::new(Six), Box::new(Seven))))), Box::new(Eight));
 
-    println!("Hello, world!");
-    println!("Ausdruck: {}, augewertet: {}", expression1.show(), evaluate_a_given_expression(expression1));
-    println!("Ausdruck: {}, augewertet: {}", expression2.show(), evaluate_a_given_expression(expression2));
-    println!("Ausdruck: {}, augewertet: {}", expression3.show(), evaluate_a_given_expression(expression3));
-    println!("Ausdruck: {}, augewertet: {}", expression4.show(), evaluate_a_given_expression(expression4));
-    println!("Ausdruck: {}, augewertet: {}", expression5.show(), evaluate_a_given_expression(expression5));
-    println!("Ausdruck: {}, augewertet: {}", expression6.show(), evaluate_a_given_expression(expression6));
-    println!("Ausdruck: {}, augewertet: {}", expression7.show(), evaluate_a_given_expression(expression7));
-}
-
-fn evaluate_a_given_expression(expression: Expression) -> String {
-    match expression.evaluate() {
+    let actual_value_2: String = match expression2.evaluate() {
         None => String::from("incompatible Types"),
         Some(Ok(value)) => value.to_string(),
-        Some(Err(value)) => value.show(),
-    }
+        Some(Err(value)) => value.to_string(),
+    };
+
+    let actual_value_3: String = match expression3.evaluate() {
+        None => String::from("incompatible Types"),
+        Some(Ok(value)) => value.to_string(),
+        Some(Err(value)) => value.to_string(),
+    };
+
+    let actual_value_7: String = match expression7.evaluate() {
+        None => String::from("incompatible Types"),
+        Some(Ok(value)) => value.to_string(),
+        Some(Err(value)) => value.to_string(),
+    };
+
+    println!("Hello, world!");
+    println!("{}", expression1.show());
+    println!("{}", expression2.show());
+    println!("{}", expression3.show());
+    println!("{}", expression4.show());
+    println!("{}", expression5.show());
+    println!("{}", expression6.show());
+    println!("{}", expression7.show());
+
+    println!("test: {}", actual_value_2);
+    println!("test: {}", actual_value_3);
+    println!("test: {}", actual_value_7);
 }

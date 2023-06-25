@@ -1,259 +1,213 @@
-use std::env;
-
 use crate::example_expressions::ExampleExpressions;
 use crate::expression::Expression;
-use crate::expression::Expression::*;
 
-mod expression;
-mod expression_show;
-mod expression_evaluate;
-mod example_expressions;
-mod expression_type_check;
-mod data_types_show;
 mod data_types;
+mod data_types_show;
+mod example_expressions;
+mod expression;
+mod expression_evaluate;
+mod expression_show;
+mod expression_type_check;
 
 fn main() {
+
+    println!("Running example expressions:");
+    println!("================================================================================");
     for expression in ExampleExpressions::iterator() {
         let initialized_expression: Expression = expression.init();
+
         println!(
-            "Ausdruck: {}, typ check: {}, ausgewertet: {}",
+            "Expression: {:<30}-> Type: {:12}Evaluation: {}",
             initialized_expression.show(),
             type_check_a_given_expression(&initialized_expression),
             evaluate_a_given_expression(&initialized_expression)
         );
     }
+    println!("================================================================================");
+    
+    loop {
+        println!("\n\nPlease enter your input:");
+        let mut input = String::new();
 
-    // Evaluate the expressions from console.
-    let args: Vec<String> = env::args().collect();
-    // println!("Number of arguments: {}", args.len());
-    if args.len() > 1 {
-        println!("Argument: {}", &args[1]);
-        let string_from_console = &args[1];
-        let (console_expression, string) = parse_expression_from_console(string_from_console.to_string());
-        println!(
-            "Ausdruck: {}, typ check: {}, augewertet: {}",
-            console_expression.show(),
-            type_check_a_given_expression(&console_expression),
-            evaluate_a_given_expression(&console_expression)
-        );
+        if let Ok(_) = std::io::stdin().read_line(&mut input) {
+            input = input.trim().to_string(); // Trim any leading/trailing whitespace
+            input = format_input(&input);
+            // println!("Processed String: {}", input);
+
+            if let Some(expression) = parse_expression(&input) {
+                println!("Parsed: {:?}", expression);
+                println!("Type:   {}", type_check_a_given_expression(&expression));
+                println!("Eval:   {}", evaluate_a_given_expression(&expression));
+            } else {
+                println!("Failed to parse expression");
+            }
+        } else {
+            println!("Failed to read input");
+        }
     }
+}
+
+
+/*
+    Remove Whitespaces
+    Replace double && and || with single
+ */
+fn format_input(input: &str) -> String {
+    let mut result = String::new();
+    let mut chars = input.chars().peekable();
+
+    while let Some(c) = chars.next() {
+        if c.is_whitespace() {
+            continue; // Skip whitespace
+        }
+
+        if c == '&' {
+            if let Some(next_char) = chars.peek() {
+                if *next_char == '&' {
+                    chars.next(); // Consume second '&'
+                    result.push_str("&");
+                    continue;
+                }
+            }
+        }
+
+        if c == '|' {
+            if let Some(next_char) = chars.peek() {
+                if *next_char == '|' {
+                    chars.next(); // Consume second '|'
+                    result.push_str("|");
+                    continue;
+                }
+            }
+        }
+
+        result.push(c);
+    }
+
+    result
 }
 
 fn evaluate_a_given_expression(expression: &Expression) -> String {
     match expression.evaluate() {
-        None => String::from("incompatible Types"),
+        None => String::from("undefined"),
         Some(Ok(value)) => value.to_string(),
-        Some(Err(value)) => value.to_string()
+        Some(Err(value)) => value.to_string(),
     }
 }
 
 fn type_check_a_given_expression(expression: &Expression) -> String {
     match expression.type_check() {
-        None => String::from("inkompatibel"),
+        None => String::from("type error"),
         Some(Ok(value)) => value.show(),
-        Some(Err(value)) => value.show()
+        Some(Err(value)) => value.show(),
     }
 }
 
-fn parse_expression_from_console(expression_str: String) -> (Expression, String) {
-    // println!("{}", expression_str); // debug statement??
-    for character in expression_str.chars() {
-        return match character {
-            '(' => {
-                let opening_parenthesis_pos = expression_str.find('(');
-                match opening_parenthesis_pos {
-                    Some(index) => {
-                        let string_until_parenthesis = expression_str[..index].trim();
-                        let string_after_parenthesis = expression_str[index + 1..].trim().to_string();
-                        match string_until_parenthesis {
-                            "One" => (One, string_after_parenthesis.to_string()),
-                            "Two" => (Two, string_after_parenthesis.to_string()),
-                            "Three" => (Three, string_after_parenthesis.to_string()),
-                            "Four" => (Four, string_after_parenthesis.to_string()),
-                            "Five" => (Five, string_after_parenthesis.to_string()),
-                            "Six" => (Six, string_after_parenthesis.to_string()),
-                            "Seven" => (Seven, string_after_parenthesis.to_string()),
-                            "Eight" => (Eight, string_after_parenthesis.to_string()),
-                            "Nine" => (Nine, string_after_parenthesis.to_string()),
-                            "ETrue" => (ETrue, string_after_parenthesis.to_string()),
-                            "EFalse" => (EFalse, string_after_parenthesis.to_string()),
-                            "Plus" => {
-                                let (expression, string) = parse_expression_from_console(string_after_parenthesis);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (Plus(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            "Mult" => {
-                                let (expression, string) = parse_expression_from_console(string_after_parenthesis);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (Mult(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            "EOr" => {
-                                let (expression, string) = parse_expression_from_console(string_after_parenthesis);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (EOr(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            "EAnd" => {
-                                let (expression, string) = parse_expression_from_console(string_after_parenthesis);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (EAnd(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            _ => (EOr(Box::new(One), Box::new(Two)), "".to_string()),
-                        }
-                    },
-                    _ => (EOr(Box::new(One), Box::new(Two)), "".to_string()),
-                }
-            },
-            ')' => {
-                let closing_parenthesis_pos = expression_str.find(')');
-                match closing_parenthesis_pos {
-                    Some(index) => {
-                        let string_until_parenthesis = expression_str[..index].trim();
-                        let string_after_parenthesis = expression_str[index + 1..].trim().to_string();
-                        match string_until_parenthesis {
-                            "One" => (One, string_after_parenthesis.to_string()),
-                            "Two" => (Two, string_after_parenthesis.to_string()),
-                            "Three" => (Three, string_after_parenthesis.to_string()),
-                            "Four" => (Four, string_after_parenthesis.to_string()),
-                            "Five" => (Five, string_after_parenthesis.to_string()),
-                            "Six" => (Six, string_after_parenthesis.to_string()),
-                            "Seven" => (Seven, string_after_parenthesis.to_string()),
-                            "Eight" => (Eight, string_after_parenthesis.to_string()),
-                            "Nine" => (Nine, string_after_parenthesis.to_string()),
-                            "ETrue" => (ETrue, string_after_parenthesis.to_string()),
-                            "EFalse" => (EFalse, string_after_parenthesis.to_string()),
-                            "Plus" => {
-                                let (expression, string) = parse_expression_from_console(string_after_parenthesis);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (Plus(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            "Mult" => {
-                                let (expression, string) = parse_expression_from_console(string_after_parenthesis);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (Mult(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            "EOr" => {
-                                let (expression, string) = parse_expression_from_console(string_after_parenthesis);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (EOr(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            "EAnd" => {
-                                let (expression, string) = parse_expression_from_console(string_after_parenthesis);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (EAnd(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            _ => (EOr(Box::new(One), Box::new(Two)), "".to_string()),
-                        }
-                    },
-                    _ => (EOr(Box::new(One), Box::new(Two)), "".to_string()),
-                }
-            },
-            ',' => {
-                let opening_parenthesis_pos = expression_str.find(',');
-                match opening_parenthesis_pos {
-                    Some(index) => {
-                        let string_until_comma = expression_str[..index].trim();
-                        let string_after_comma = expression_str[index + 1..].trim().to_string();
-                        match string_until_comma {
-                            "One" => (One, string_after_comma.to_string()),
-                            "Two" => (Two, string_after_comma.to_string()),
-                            "Three" => (Three, string_after_comma.to_string()),
-                            "Four" => (Four, string_after_comma.to_string()),
-                            "Five" => (Five, string_after_comma.to_string()),
-                            "Six" => (Six, string_after_comma.to_string()),
-                            "Seven" => (Seven, string_after_comma.to_string()),
-                            "Eight" => (Eight, string_after_comma.to_string()),
-                            "Nine" => (Nine, string_after_comma.to_string()),
-                            "ETrue" => (ETrue, string_after_comma.to_string()),
-                            "EFalse" => (EFalse, string_after_comma.to_string()),
-                            "Plus" => {
-                                let (expression, string) = parse_expression_from_console(string_after_comma);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (Plus(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            "Mult" => {
-                                let (expression, string) = parse_expression_from_console(string_after_comma);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (Mult(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            "EOr" => {
-                                let (expression, string) = parse_expression_from_console(string_after_comma);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (EOr(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            "EAnd" => {
-                                let (expression, string) = parse_expression_from_console(string_after_comma);
-                                let (right_expression, right_string) = parse_expression_from_console(string);
-                                (EAnd(
-                                    Box::new(expression),
-                                    Box::new(right_expression)
-                                ),
-                                 right_string.to_string()
-                                )
-                            },
-                            _ => (EOr(Box::new(One), Box::new(Two)), "".to_string()),
-                        }
-                    },
-                    _ => (EOr(Box::new(One), Box::new(Two)), "".to_string()),
-                }
-            },
-            _ => {continue}
-        }
+fn parse_expression(input: &str) -> Option<Expression> {
+    let mut chars = input.chars().peekable();
+    let expression = parse_expr(&mut chars, 0)?;
+
+    if chars.next().is_some() {
+        println!("ERROR: Unexpected end of input");
+        return None;
     }
 
-    return (EOr(Box::new(One), Box::new(Two)), "".to_string());
+    Some(expression)
+}
+
+fn parse_expr<I>(chars: &mut std::iter::Peekable<I>, parent_precedence: usize) -> Option<Expression>
+where
+    I: Iterator<Item = char>,
+{
+    let token = parse_token(chars)?;
+
+    let mut lhs = Some(token);
+
+    while let Some(next_char) = chars.peek().copied() {
+        let precedence = operator_precedence(next_char);
+
+        if precedence <= parent_precedence {
+            break; // Current operator has lower precedence, stop parsing
+        }
+
+        chars.next(); // Consume the operator
+
+        let rhs = parse_expr(chars, precedence)?;
+
+        lhs = match next_char {
+            '+' => Some(Expression::Plus(Box::new(lhs.unwrap()), Box::new(rhs))),
+            '*' => Some(Expression::Mult(Box::new(lhs.unwrap()), Box::new(rhs))),
+            '&' => Some(Expression::EAnd(Box::new(lhs.unwrap()), Box::new(rhs))),
+            '|' => Some(Expression::EOr(Box::new(lhs.unwrap()), Box::new(rhs))),
+            _ => {
+                println!("ERROR: Invalid operator: {}", next_char);
+                return None;
+            }
+        };
+    }
+
+    lhs
+}
+
+fn parse_token<I>(chars: &mut std::iter::Peekable<I>) -> Option<Expression>
+where
+    I: Iterator<Item = char>,
+{
+    let c = chars.next()?;
+
+    match c {
+        '0' => Some(Expression::Zero),
+        '1' => Some(Expression::One),
+        '2' => Some(Expression::Two),
+        '3' => Some(Expression::Three),
+        '4' => Some(Expression::Four),
+        '5' => Some(Expression::Five),
+        '6' => Some(Expression::Six),
+        '7' => Some(Expression::Seven),
+        '8' => Some(Expression::Eight),
+        '9' => Some(Expression::Nine),
+        't' => {
+            if chars.next() == Some('r') && chars.next() == Some('u') && chars.next() == Some('e') {
+                Some(Expression::ETrue)
+            } else {
+                println!("ERROR: Typo in 'true'");
+                None
+            }
+        }
+        'f' => {
+            if chars.next() == Some('a')
+                && chars.next() == Some('l')
+                && chars.next() == Some('s')
+                && chars.next() == Some('e')
+            {
+                Some(Expression::EFalse)
+            } else {
+                println!("ERROR: Typo in 'false'");
+                None
+            }
+        }
+        '(' => {
+            let expr = parse_expr(chars, 0)?;
+            if chars.next() == Some(')') {
+                Some(expr)
+            } else {
+                println!("ERROR: Missing ')'");
+                None
+            }
+        }
+        _ => {
+            println!("ERROR: Invalid Character {}", c);
+            None // Invalid character
+        }
+    }
+}
+
+fn operator_precedence(operator: char) -> usize {
+    match operator {
+        '*' => 2,
+        '+' => 1,
+        '&' => 2,
+        '|' => 1,
+        _ => 0,
+    }
 }

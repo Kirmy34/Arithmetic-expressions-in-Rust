@@ -1,4 +1,4 @@
-use crate::expression::Expression;
+use crate::{expression::Expression, data_types::DataTypes};
 
 impl Expression {
     pub fn evaluate(&self) -> Option<Result<i32, bool>> {
@@ -24,11 +24,17 @@ impl Expression {
                 }
             },
             Self::Mult(left, right) => {
-                let left_result = left.evaluate();
-                let right_result = right.evaluate();
-                match (left_result, right_result) {
-                    (Some(Ok(left_value)), Some(Ok(right_value))) => Some(Ok(left_value * right_value)),
-                    (_, _) => None
+                match(left.as_ref()){
+                    (&Expression::Zero) => Some(Ok(0)),
+                    (_) => {
+                         let left_result = left.evaluate();
+                         let right_result = right.evaluate();
+                         match (left_result, right_result) {
+                             (Some(Ok(0)), _) => Some(Ok(0)),
+                             (Some(Ok(left_value)), Some(Ok(right_value))) => Some(Ok(left_value * right_value)),
+                             (_, _) => None
+                         }
+                    }
                 }
             },
             Self::EOr(left, right) => {

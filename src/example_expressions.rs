@@ -17,6 +17,7 @@ pub enum ExampleExpressions {
     EXPRESSION7,
     EXPRESSION8,
     EXPRESSION9,
+    EXPRESSION10,
 }
 
 impl ExampleExpressions {
@@ -31,6 +32,7 @@ impl ExampleExpressions {
             EXPRESSION7 => Mult(Box::new(Four), Box::new(Plus(Box::new(Two), Box::new(Nine)))),
             EXPRESSION8 => Plus(Box::new(Mult(Box::new(Three), Box::new(Plus(Box::new(Six), Box::new(Seven))))), Box::new(Eight)),
             EXPRESSION9 => EOr(Box::new(ETrue), Box::new(Plus(Box::new(Five), Box::new(Two)))),
+            EXPRESSION10 => Mult(Box::new(Mult(Box::new(EFalse), Box::new(Zero))), Box::new(Five)),
         }
     }
 
@@ -45,6 +47,7 @@ impl ExampleExpressions {
             EXPRESSION7,
             EXPRESSION8,
             EXPRESSION9,
+            EXPRESSION10,
         ].iter().copied()
     }
 }
@@ -61,6 +64,7 @@ pub enum ExampleExpressionsTypeCheckResults {
     EXPRESSION7,
     EXPRESSION8,
     EXPRESSION9,
+    EXPRESSION10,
 }
 
 #[cfg(test)]
@@ -76,6 +80,7 @@ impl ExampleExpressionsTypeCheckResults {
             ExampleExpressionsTypeCheckResults::EXPRESSION7 => Some(Ok(TInt)),
             ExampleExpressionsTypeCheckResults::EXPRESSION8 => Some(Ok(TInt)),
             ExampleExpressionsTypeCheckResults::EXPRESSION9 => None,
+            ExampleExpressionsTypeCheckResults::EXPRESSION10 => None,
         }
     }
 
@@ -90,6 +95,7 @@ impl ExampleExpressionsTypeCheckResults {
             ExampleExpressionsTypeCheckResults::EXPRESSION7,
             ExampleExpressionsTypeCheckResults::EXPRESSION8,
             ExampleExpressionsTypeCheckResults::EXPRESSION9,
+            ExampleExpressionsTypeCheckResults::EXPRESSION10,
         ].iter().copied()
     }
 }
@@ -106,6 +112,7 @@ pub enum ExampleExpressionsEvaluateResults {
     EXPRESSION7,
     EXPRESSION8,
     EXPRESSION9,
+    EXPRESSION10,
 }
 
 #[cfg(test)]
@@ -115,12 +122,13 @@ impl ExampleExpressionsEvaluateResults {
             ExampleExpressionsEvaluateResults::EXPRESSION1 => Some(Ok(1)),
             ExampleExpressionsEvaluateResults::EXPRESSION2 => Some(Ok(20)),
             ExampleExpressionsEvaluateResults::EXPRESSION3 => Some(Err(true)),
-            ExampleExpressionsEvaluateResults::EXPRESSION4 => None,
-            ExampleExpressionsEvaluateResults::EXPRESSION5 => None,
+            ExampleExpressionsEvaluateResults::EXPRESSION4 => Some(Ok(0)),
+            ExampleExpressionsEvaluateResults::EXPRESSION5 => Some(Ok(0)),
             ExampleExpressionsEvaluateResults::EXPRESSION6 => Some(Err(false)),
             ExampleExpressionsEvaluateResults::EXPRESSION7 => Some(Ok(44)),
             ExampleExpressionsEvaluateResults::EXPRESSION8 => Some(Ok(47)),
             ExampleExpressionsEvaluateResults::EXPRESSION9 => Some(Err(true)),
+            ExampleExpressionsEvaluateResults::EXPRESSION10 => None,
         }
     }
 
@@ -135,6 +143,7 @@ impl ExampleExpressionsEvaluateResults {
             ExampleExpressionsEvaluateResults::EXPRESSION7,
             ExampleExpressionsEvaluateResults::EXPRESSION8,
             ExampleExpressionsEvaluateResults::EXPRESSION9,
+            ExampleExpressionsEvaluateResults::EXPRESSION10,
         ].iter().copied()
     }
 }
@@ -151,6 +160,7 @@ pub enum ExampleExpressionsShowResults {
     EXPRESSION7,
     EXPRESSION8,
     EXPRESSION9,
+    EXPRESSION10,
 }
 
 #[cfg(test)]
@@ -166,6 +176,7 @@ impl ExampleExpressionsShowResults {
             ExampleExpressionsShowResults::EXPRESSION7 => "4 * (2 + 9)",
             ExampleExpressionsShowResults::EXPRESSION8 => "3 * (6 + 7) + 8",
             ExampleExpressionsShowResults::EXPRESSION9 => "(true || 5 + 2)",
+            ExampleExpressionsShowResults::EXPRESSION10 => "false * 0 * 5",
         }
     }
 
@@ -180,6 +191,7 @@ impl ExampleExpressionsShowResults {
             ExampleExpressionsShowResults::EXPRESSION7,
             ExampleExpressionsShowResults::EXPRESSION8,
             ExampleExpressionsShowResults::EXPRESSION9,
+            ExampleExpressionsShowResults::EXPRESSION10,
         ].iter().copied()
     }
 }

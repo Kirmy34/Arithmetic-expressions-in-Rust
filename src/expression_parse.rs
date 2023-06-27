@@ -1,4 +1,6 @@
-fn parse_expr<I>(chars: &mut std::iter::Peekable<I>, parent_precedence: usize) -> Option<Expression>
+use crate::expression::Expression;
+
+pub(crate) fn parse_expr<I>(chars: &mut std::iter::Peekable<I>, parent_precedence: usize) -> Option<Expression>
 where
     I: Iterator<Item = char>,
 {
@@ -36,7 +38,7 @@ fn parse_token<I>(chars: &mut std::iter::Peekable<I>) -> Option<Expression>
 where
     I: Iterator<Item = char>,
 {
-    skip_whitespaces(chars);
+    // skip_whitespaces(chars);
     let c = chars.next()?;
 
     match c {

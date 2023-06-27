@@ -1,0 +1,2 @@
+\babel@toc {german}{}\relax 
+\contentsline {section}{\numberline {1}Datatypes}{1}{section.1}%

@@ -27,13 +27,19 @@ impl Expression {
                 match left.as_ref(){
                     &Expression::Zero => Some(Ok(0)),
                     _ => {
-                         let left_result = left.evaluate();
-                         let right_result = right.evaluate();
-                         match (left_result, right_result) {
-                             (Some(Ok(0)), _) => Some(Ok(0)),
-                             (Some(Ok(left_value)), Some(Ok(right_value))) => Some(Ok(left_value * right_value)),
-                             (_, _) => None
-                         }
+                        let left_result = left.evaluate();
+                        match left_result {
+                            Some(Ok(0)) => Some(Ok(0)), // if left side is zero do not eval right side
+                            Some(Ok(left_value)) => {
+                                let right_result = right.evaluate();
+                                match right_result {
+                                    Some(Ok(0)) => Some(Ok(0)),
+                                    Some(Ok(right_value)) => Some(Ok(left_value * right_value)),
+                                    _ => None
+                                }
+                            }
+                            _ => None,
+                        }
                     }
                 }
             },

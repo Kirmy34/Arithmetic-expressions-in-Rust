@@ -2,5 +2,9 @@
 \contentsline {section}{\numberline {1}Datatype}{1}{section.1}%
 \contentsline {section}{\numberline {2}Expression Enum}{1}{section.2}%
 \contentsline {section}{\numberline {3}Evaluieren von Expressions}{1}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Verwendung des Pattern-Matching zur Evaluation von Ausdrücken}{1}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Rückgabetyp und Unterscheidung von Zahlen und logischen Werten}{1}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Evaluation von verschiedenen Ausdruckstypen: Addition, Multiplikation, Oder und Und}{1}{subsection.3.3}%
 \contentsline {section}{\numberline {4}Parsen von Expressions}{3}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Parsen einzelner Tokens}{3}{subsection.4.1}%
 \contentsline {section}{\numberline {5}Expression Typcheck}{3}{section.5}%

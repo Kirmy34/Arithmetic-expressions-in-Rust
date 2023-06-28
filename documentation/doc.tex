@@ -9,7 +9,7 @@
 \usepackage{minted}
 \clubpenalty=10000
 \widowpenalty=1000
-\title{Arithmetische Ausdrücke in Rust - Dokumentation}
+\title{Arithmetische Ausdrücke in Rust Dokumentation}
 \date{}
 \author{
 		Mario Occhinegro (74661)\\
@@ -42,7 +42,8 @@ diese hier wieder Unterexpressionen verwalten. Ein mal für Rechts und ein mal f
 \subsection{Verwendung des Pattern-Matching zur Evaluation von Ausdrücken}
 Um eine Expression zu evaluieren, wird das Pattern-Matching von Rust verwendet. Bezüglich des Rückgabetyps, ist zu beachten, dass aufgrund der Tatsache, dass in den Ausdrücken sowohl logische Ausdrücke als auch Ausdrücke mit Zahlen vorkommen, hier eine Unterscheidung benötigt wird. Weiterhin besteht die Möglichkeit, dass ein Ausdruck gar nicht evaluiert werden, kann, weil eventuell eine nicht auflösbare Vermischung von logischen und mathematischen Ausdrücken vorkommt. Manche dieser vermischten Ausdrücke können jedoch aufgrund der Short-Circuit-Evaluation trotzdem ausgewertet werden.
 \subsection{Rückgabetyp und Unterscheidung von Zahlen und logischen Werten}
-Um nun den Rückgabewert der Evaluate-Funktion zu definieren, wird Option<Result<i32, bool>> gewählt, da mittels der Option, angegeben werden kann, ob überhaupt ein Wert zurückgegeben wird (Some), oder ob die Auswertung gescheitert ist und kein Wert zurückgegeben werden kann (None). Um zwischen einer Zahl und einem logischen Wert zu unterscheiden, wird Result<i32, bool> verwendet, hierdurch, kann mittels Ok(number) eine Zahl und mittels Err(logic) ein logischer Wert zurückgegeben werden, dies wird für das Pattern-Matching benötigt, da es hierdurch einfacher wird, den Typ einer Evaluation zu matchen und zu erkennen.
+Um nun den Rückgabewert der Evaluate-Funktion zu definieren, wird Option \textless Result \textless i32, bool \textgreater  \textgreater  gewählt, da mittels der Option, angegeben werden kann, ob überhaupt ein Wert zurückgegeben wird (Some), oder ob die Auswertung gescheitert ist und kein Wert zurückgegeben werden kann (None). Um zwischen einer Zahl und einem logischen Wert zu unterscheiden, wird
+\\Result \textless i32, bool \textgreater  verwendet, hierdurch, kann mittels Ok(number) eine Zahl und mittels Err(logic) ein logischer Wert zurückgegeben werden, dies wird für das Pattern-Matching benötigt, da es hierdurch einfacher wird, den Typ einer Evaluation zu matchen und zu erkennen.
 \subsection{Evaluation von verschiedenen Ausdruckstypen: Addition, Multiplikation, Oder und Und}
 Um jetzt die eigentliche Evaluation durchzuführen, werden zunächst die Patterns, für Expression angegeben, welche nur eine Zahl enthalten. Das bedeutet, es werden die Expression Zero bis Nine im Pattern-Matching angegeben und dann die entsprechende Zahl zurückgegeben, sowie die Patterns für die booleschen Werte true und false.
 Danach folgt das Pattern für eine Plus-Expression. Hier werden zunächst, beide Seiten der Plus-Expression evaluiert. Danach folgt ein Pattern-Matching auf die beiden Ergebnisse, wenn beide Ergebnisse einen Zahlen-Wert liefern (Some(Ok(left\

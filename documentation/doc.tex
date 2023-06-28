@@ -14,7 +14,7 @@
 \author{
 		Mario Occhinegro (74661)\\
 		Michael Kirmizakis (75592)\\
-		Vorname Nachname ()\\
+		Jonas Heck (67889)
 }
 \usepackage{setspace}
 \onehalfspacing
@@ -40,12 +40,32 @@ Für die Operatoren Plus, Mult, Or und And gibt auch jeweils eine Variante. Inte
 diese hier wieder Unterexpressionen verwalten. Ein mal für Rechts und ein mal für Links.
 \section{Evaluieren von Expressions}
 \section{Parsen von Expressions}
+Die Funktion, die das parsen von Expression zuständig ist funktioniert wie folgt.
+Sie bekommt einen String und ein Präzedenzlevel, um sich in der Rekursion zu merken
+was die Präzedenz der Parent Expression ist. Die Ausgabe ist dann ein Expressionenum, das den eingegebene Expression beschreibt.
+Innerhalb des Rumpfes bewegen wir uns von Links nach Rechts durch den übergebenen String.
+Jeder Aufruf fängt damit an, dass wir den Charakter auf dem wir uns befinden parsen.
+Dies ist immer eine Zahl, ein boolean oder ein geklammerter Ausdruck. 
+Diese Expression merken wir uns als linken Teilbaum.
+Danach betrachten wir falls vorhanden, den nächsten Charakter, bei dem es sich in unserer Logik um einen Operator handeln muss, 
+da wir keine unnären Operatoren unterstützen. Falls nicht vorhanden geben wir die linke Seite als Expression zurück und sind fertig.
+Für den Fall, dass es sich aber wirklich um einen Operator handelt, bestimmen wir zu aller erst dessen Präzedenz.
+Falls die Übergeordnete Präzedenz der Parent Expression höher ist, so brechen wir an dieser Stelle ab und geben den bis dato errechnetem Baum zurück.
+Das ist notwendig, da falls die Präzedenz des übergeordneten Operator größer ist, der momentane Charakter teil der Parent-Expression ist.
+Falls für den anderen Fall setzen wir den Operator in die Wurzel unseres Baum. 
+Jetzt fehlt nur noch die rechte Seite unseres Baumes.
+Diese berechnen wir Rekursiv auf dem Rest des Iterables und dem momentanen Präzedenzoperator.
+Falls der Unteraufruf den String nicht voll aufbraucht, springen wir wieder in While Schleife.
+Jetzt updaten wir den linken Teilbaum mit dem Berechneten Ergebnis.
+Hier ein Beispiel an den Ausdrücken 
+
+Falls wir auf eine Klammer stoßen, so verarbeiten wir den Inhalt dieser sofort, geben die Expression zurück und werfen einen Error, falls sie nicht geschlossen wird. Der Rest ist analog wie oben.
 \section{Expression Typcheck}
-Implementiert die Methode type-check für den Expression-Typ.
 Diese Methode prüft den Datentyp eines Ausdrucks und gibt ein Ergebnis zurück.
-Wenn der Ausdruck eine Zahl zwischen 0 und 9 ist, wird der Datentyp TInt zurückgegeben.
-Wenn der Ausdruck ETrue oder EFalse ist, wird der Datentyp TBool zurückgegeben.
-Wenn der Ausdruck eine Addition, Multiplikation, logische ODER- oder logische UND-Operation ist, werden die Datentypen der linken und rechten Operanden überprüft.
+implementiert die methode typecheck für den expressiontyp.
+wenn der ausdruck eine zahl zwischen 0 und 9 ist, wird der datentyp tint zurückgegeben.
+wenn der ausdruck etrue oder efalse ist, wird der datentyp tbool zurückgegeben.
+wenn der ausdruck eine addition, multiplikation, logische oder oder logische undoperation ist, werden die datentypen der linken und rechten operanden überprüft.
 Wenn beide Operanden den richtigen Typ haben, wird TInt bzw.
 TBool zurückgegeben, andernfalls wird None zurückgegeben.
 \end{document}

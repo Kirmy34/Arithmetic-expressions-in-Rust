@@ -7,6 +7,7 @@
 
 ## Nutzung
 Um Expression einzulesen reicht es `cargo run` auszuführen.
+
 Um sich die Tests anzuschauen führt man `cargo test` aus.
 
 ## Datatype 
@@ -19,25 +20,22 @@ Wir haben Integer oder boolsche Werte
 ## Evaluieren von Expressions
 Das Expression Enum beschreibt alle möglichen Ausdrücke, die wir verarbeiten
 können. Eine Variante jeweils für die Zahlen von 1-9. Sowie jeweils eine Variante
-für true und false. Für die Operatoren Plus, Mult, Or und And gibt auch je-
-weils eine Variante. Interessant ist hier, dass diese hier wieder Unterexpressionen
+für true und false. Für die Operatoren Plus, Mult, Or und And gibt auch 
+jeweils eine Variante. Interessant ist hier, dass diese hier wieder Unterexpressionen
 verwalten. Ein mal für Rechts und ein mal für Links.
 ### Verwendung des Pattern-Matching zur Evaluation von Ausdrücken
-Um eine Expression zu evaluieren, wird das Pattern-Matching von Rust verwen-
-det. Bezüglich des Rückgabetyps, ist zu beachten, dass aufgrund der Tatsache,
-dass in den Ausdrücken sowohl logische Ausdrücke als auch Ausdrücke mit Zah-
-len vorkommen, hier eine Unterscheidung benötigt wird. Weiterhin besteht die
-Möglichkeit, dass ein Ausdruck gar nicht evaluiert werden kann, weil eventuell ei-
-ne nicht auflösbare Vermischung von logischen und mathematischen Ausdrücken
+Um eine Expression zu evaluieren, wird das Pattern-Matching von Rust verwendet.
+Bezüglich des Rückgabetyps, ist zu beachten, dass aufgrund der Tatsache,
+dass in den Ausdrücken sowohl logische Ausdrücke als auch Ausdrücke mit 
+Zahlen vorkommen, hier eine Unterscheidung benötigt wird. Weiterhin besteht die
+Möglichkeit, dass ein Ausdruck gar nicht evaluiert werden kann, weil eventuell 
+eine nicht auflösbare Vermischung von logischen und mathematischen Ausdrücken
 vorkommt. Manche dieser vermischten Ausdrücke können jedoch aufgrund der
 Short-Circuit-Evaluation trotzdem ausgewertet werden.
 ### Rückgabetyp und Unterscheidung von Zahlen und logischen Werten
-Um nun den Rückgabewert der Evaluate-Funktion zu definieren, wird
-Option <Result <i32, bool >>gewählt, da mittels der Option, angegeben wer-
-den kann, ob überhaupt ein Wert zurückgegeben wird (Some), oder ob die Aus-
-wertung gescheitert ist und kein Wert zurückgegeben werden kann (None). Um
+Um nun den Rückgabewert der Evaluate-Funktion zu definieren, wir `Option <Result <i32, bool >> `gewählt, da mittels der Option, angegeben werden kann, ob überhaupt ein Wert zurückgegeben wird `(Some)`, oder ob die Auswertung gescheitert ist und kein Wert zurückgegeben werden kann (None). Um
 zwischen einer Zahl und einem logischen Wert zu unterscheiden, wird
-Result <i32, bool >verwendet, hierdurch, kann mittels Ok(number) eine Zahl
+`Result <i32, bool >` verwendet, hierdurch, kann mittels `Ok(number)` eine Zahl
 und mittels Err(logic) ein logischer Wert zurückgegeben werden, dies wird für
 das Pattern-Matching benötigt, da es hierdurch einfacher wird, den Typ einer
 Evaluation zu matchen und zu erkennen.
@@ -51,11 +49,11 @@ booleschen Werte true und false definiert.
 ### Evaluation von Plus-Expressions
 Als nächstes folgt das Pattern für eine Plus-Expression. Hier werden zunächst
 beide Seiten der Plus-Expression evaluiert. Anschließend wird ein Pattern-Matching
-auf die beiden Ergebnisse angewendet. Wenn beide Ergebnisse Zahlenwerte lie-
-fern (Some(Ok(left value))), werden die beiden Werte von der linken und rechten
+auf die beiden Ergebnisse angewendet. Wenn beide Ergebnisse Zahlenwerte 
+liefern `(Some(Ok(left value)))`, werden die beiden Werte von der linken und rechten
 Seite aufaddiert und an die aufrufende Funktion zurückgegeben. Wenn eine der
-beiden Seiten keine Zahl zurückliefert, wird dies mittels des don’t care Pat-
-terns im entsprechenden Fall erkannt, und es wird None zurückgegeben, um
+beiden Seiten keine Zahl zurückliefert, wird dies mittels des don’t care 
+Patterns im entsprechenden Fall erkannt, und es wird None zurückgegeben, um
 anzuzeigen, dass keine Auswertung der Expression möglich war.
 ### Evaluation von Multiplikation-Expressions
 Als nächstes erfolgt die Pattern-Prüfung für eine Multiplikations-Expression.
@@ -73,33 +71,28 @@ dieselben Fälle wie das Pattern-Matching für die linke Seite abdeckt. Wenn ein
 Zahlenwert ungleich 0 ermittelt wurde, wird anders als im Fall für die linke
 Seite, die Zahlen der linken und rechten Seite multipliziert und zurückgegeben.
 ### Evaluation von Oder-Expressions
-Um eine Oder-Expression auszuwerten, wird zunächst die linke Seite ausge-
-wertet, und dann wird ein Pattern-Matching auf diesem Ergebnis durchgeführt.
+Um eine Oder-Expression auszuwerten, wird zunächst die linke Seite ausgewertet, und dann wird ein Pattern-Matching auf diesem Ergebnis durchgeführt.
 Falls die linke Seite nicht ausgewertet werden konnte, wird direkt None zurückgegeben.
 Wenn im Rahmen der Auswertung der linken Seite eine Zahl ermittelt wurde,
 wird die Auswertung ebenfalls abgebrochen und None zurückgegeben. Wenn die
 linke Seite jedoch zu einem logischen Wert ausgewertet werden konnte, wird auf
 diesem Wert wiederum ein Pattern-Matching gestartet. Wenn die linke Seite der
 Oder-Expression zu true ausgewertet wurde, kann direkt true als Wert für die
-Expression zurückgegeben werden, da die rechte Seite das Ergebnis der Aus-
-wertung nicht mehr verändern kann. Wenn die linke Seite zu false ausgewertet
-wurde, wird auch die rechte Seite ausgewertet, und dann wird auf diesem Er-
-gebnis ebenfalls ein Pattern-Matching durchgeführt. Dabei wird geprüft, ob die
+Expression zurückgegeben werden, da die rechte Seite das Ergebnis der Auswertung nicht mehr verändern kann. Wenn die linke Seite zu false ausgewertet
+wurde, wird auch die rechte Seite ausgewertet, und dann wird auf diesem Ergebnis ebenfalls ein Pattern-Matching durchgeführt. Dabei wird geprüft, ob die
 Expression überhaupt evaluiert werden konnte und ob ein boolescher Wert für
 die rechte Seite evaluiert wurde. Falls ein boolescher Wert auf der rechten Seite
-steht, wird dieser als Wert der Expression zurückgegeben, da der Wert der Ex-
-pression nun nur noch von diesem abhängt.
+steht, wird dieser als Wert der Expression zurückgegeben, da der Wert der Expression nun nur noch von diesem abhängt.
 ### Evaluation von Und-Expressions
 Abschließend folgt das Pattern für die Und-Expression. Bei dieser wird ebenfalls
 zuerst die linke Seite der Expression ausgewertet, und auf dem Ergebnis dieser
 Auswertung wird ein Pattern-Matching durchgeführt. Falls die linke Seite nicht
-evaluiert werden konnte, wird None zurückgegeben. Wenn die linke Seite zu ei-
-ner Zahl evaluiert wurde, wird die weitere Auswertung abgebrochen und None
+evaluiert werden konnte, wird None zurückgegeben. Wenn die linke Seite zu
+einer Zahl evaluiert wurde, wird die weitere Auswertung abgebrochen und None
 zurückgegeben. Nur wenn die linke Seite zu einem booleschen Wert ausgewertet
 wurde, wird auf diesem Ergebnis ein weiteres Pattern-Matching durchgeführt.
 Dabei wird zunächst geprüft, ob der ermittelte Wert false ist. In diesem Fall
-wird die rechte Seite gar nicht ausgewertet, da bei einer Und-Expression so-
-wohl die rechte als auch die linke Seite true sein müssen, um true als Ergebnis
+wird die rechte Seite gar nicht ausgewertet, da bei einer Und-Expression sowohl die rechte als auch die linke Seite true sein müssen, um true als Ergebnis
 zurückzugeben. Wenn der linke Teil der Und-Expression true ist, wird auch der
 rechte Teil ausgewertet und geprüft, ob die Auswertung einen Wahrheitswert
 ergibt. Wenn die Auswertung der rechten Seite einen booleschen Wert ergibt,
@@ -135,7 +128,6 @@ zurück. Wenn der ausdruck eine Zahl zwischen 0 und 9 ist, wird der Daten-
 typ TInt zurückgegeben. Wenn der Ausdruck ETrue oder EFalse ist, wird der
 Datentyp TBool zurückgegeben. Wenn der Ausdruck eine Addition, Multipli-
 kation, Logische-Oder oder logische Und-Operation ist, werden die Datentypen
-der linken und rechten Operanden überprüft. Wenn beide Operanden den rich-
-tigen Typ haben, wird TInt bzw. TBool zurückgegeben, andernfalls wird None
+der linken und rechten Operanden überprüft. Wenn beide Operanden den richtigen Typ haben, wird TInt bzw. TBool zurückgegeben, andernfalls wird None
 zurückgegeben.
 

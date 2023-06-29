@@ -10,12 +10,12 @@ Um Expression einzulesen reicht es `cargo run` auszuführen.
 Um sich die Tests anzuschauen führt man `cargo test` aus.
 
 ## Datatype 
-Einfaches Enum zur Bestimmung der Art des Datentyps. Wir haben Integer
-oder boolsche Werte
+Einfaches Enum zur Bestimmung der Art des Datentyps. 
+Wir haben Integeroder boolsche Werte
 
 ## Expression Enum
-Einfaches Enum zur Bestimmung der Art des Datentyps. Wir haben Integer
-oder boolsche Werte
+Einfaches Enum zur Bestimmung der Art des Datentyps. 
+Wir haben Integer oder boolsche Werte
 ## Evaluieren von Expressions
 Das Expression Enum beschreibt alle möglichen Ausdrücke, die wir verarbeiten
 können. Eine Variante jeweils für die Zahlen von 1-9. Sowie jeweils eine Variante

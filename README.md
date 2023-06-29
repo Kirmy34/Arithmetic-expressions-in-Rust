@@ -71,6 +71,24 @@ Expression angegeben, die nur eine Zahl enthalten. Das bedeutet, es werden
 die Expression-Patterns Zero bis Nine im Pattern-Matching angegeben, und die
 entsprechende Zahl wird zurückgegeben. Ebenso werden die Patterns für die
 booleschen Werte true und false definiert.
+```rs
+pub fn evaluate(&self) -> Option<Result<i32, bool>> {
+    match self {
+        Self::Zero => Some(Ok(0)),
+        Self::One => Some(Ok(1)),
+        Self::Two => Some(Ok(2)),
+        Self::Three => Some(Ok(3)),
+        Self::Four => Some(Ok(4)),
+        Self::Five => Some(Ok(5)),
+        Self::Six => Some(Ok(6)),
+        Self::Seven => Some(Ok(7)),
+        Self::Eight => Some(Ok(8)),
+        Self::Nine => Some(Ok(9)),
+        //other patterns
+    }
+}
+
+```
 ### Evaluation von Plus-Expressions
 Als nächstes folgt das Pattern für eine Plus-Expression. Hier werden zunächst
 beide Seiten der Plus-Expression evaluiert. Anschließend wird ein Pattern-Matching
@@ -80,6 +98,22 @@ Seite aufaddiert und an die aufrufende Funktion zurückgegeben. Wenn eine der
 beiden Seiten keine Zahl zurückliefert, wird dies mittels des don’t care 
 Patterns im entsprechenden Fall erkannt, und es wird None zurückgegeben, um
 anzuzeigen, dass keine Auswertung der Expression möglich war.
+```rs
+pub fn evaluate(&self) -> Option<Result<i32, bool>> {
+    match self {
+        //other patterns
+        Self::Plus(left, right) => {
+            let left_result = left.evaluate();
+            let right_result = right.evaluate();
+            match (left_result, right_result) {
+                (Some(Ok(left_value)), Some(Ok(right_value))) => Some(Ok(left_value + right_value)),
+                (_, _) => None
+            }
+        },
+        //other other patterns
+    }
+}
+```
 ### Evaluation von Multiplikation-Expressions
 Als nächstes erfolgt die Pattern-Prüfung für eine Multiplikations-Expression.
 Hier wird zuerst überprüft, ob an der linken Stelle der Expression eine 0 steht.
@@ -95,6 +129,35 @@ wurde, wird auch auf diesem Ergebnis ein Pattern-Matching durchgeführt, das
 dieselben Fälle wie das Pattern-Matching für die linke Seite abdeckt. Wenn ein
 Zahlenwert ungleich 0 ermittelt wurde, wird anders als im Fall für die linke
 Seite, die Zahlen der linken und rechten Seite multipliziert und zurückgegeben.
+```rs
+pub fn evaluate(&self) -> Option<Result<i32, bool>> {
+    match self {
+        //other patterns
+
+        Self::Mult(left, right) => {
+            match left.as_ref(){
+                &Expression::Zero => Some(Ok(0)),
+                _ => {
+                    let left_result = left.evaluate();
+                    match left_result {
+                        Some(Ok(0)) => Some(Ok(0)), // if left side is zero do not eval right side
+                        Some(Ok(left_value)) => {
+                            let right_result = right.evaluate();
+                            match right_result {
+                                Some(Ok(0)) => Some(Ok(0)),
+                                Some(Ok(right_value)) => Some(Ok(left_value * right_value)),
+                                _ => None
+                            }
+                        }
+                        _ => None,
+                    }
+                }
+            }
+        },
+        //other other patterns
+    }
+}
+```
 ### Evaluation von Oder-Expressions
 Um eine Oder-Expression auszuwerten, wird zunächst die linke Seite ausgewertet, und dann wird ein Pattern-Matching auf diesem Ergebnis durchgeführt.
 Falls die linke Seite nicht ausgewertet werden konnte, wird direkt None zurückgegeben.
@@ -108,6 +171,35 @@ wurde, wird auch die rechte Seite ausgewertet, und dann wird auf diesem Ergebnis
 Expression überhaupt evaluiert werden konnte und ob ein boolescher Wert für
 die rechte Seite evaluiert wurde. Falls ein boolescher Wert auf der rechten Seite
 steht, wird dieser als Wert der Expression zurückgegeben, da der Wert der Expression nun nur noch von diesem abhängt.
+```rs
+pub fn evaluate(&self) -> Option<Result<i32, bool>> {
+    match self {
+        //other patterns
+        Self::EOr(left, right) => {
+            let left_result = left.evaluate();
+            match left_result {
+                None => None, // Expression could not be evaluated
+                Some(Ok(_left_value)) => None, // got an int in logic eval
+                Some(Err(left_value)) => {
+                    match left_value {
+                        true => Some(Err(left_value)), // pass true to caller
+                        false => {
+                            let right_result = right.evaluate();
+                            match right_result {
+                                None => None, // Expression could not be evaluated
+                                Some(Ok(_right_value)) => None, // got an int in logic eval
+                                Some(Err(right_value)) => Some(Err(right_value)), // pass value to caller
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        //other other patterns
+    }
+}
+```
+
 ### Evaluation von Und-Expressions
 Abschließend folgt das Pattern für die Und-Expression. Bei dieser wird ebenfalls
 zuerst die linke Seite der Expression ausgewertet, und auf dem Ergebnis dieser

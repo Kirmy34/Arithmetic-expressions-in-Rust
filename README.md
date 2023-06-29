@@ -6,6 +6,8 @@
 - Mario Occhinegro, ocma1013,
 
 ## Nutzung
+Um Expression einzulesen reicht es `cargo run` auszuführen.
+Um sich die Tests anzuschauen führt man `cargo test` aus.
 
 ## Datatype 
 Einfaches Enum zur Bestimmung der Art des Datentyps. Wir haben Integer

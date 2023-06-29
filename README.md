@@ -386,14 +386,38 @@ Der Baum des Unteraufrufs sieht dann so aus.
 - Operator: noch nicht bestimmt
 - Rechts: noch nicht bestimmt
 
-Da unser Operator `+` aber eine geringere Präzedenz hat als die von `*` fliegen wir aus dieser heraus und es wird nur linke Teilbaum zurückgegeben.
+Da unser Operator `+` aber eine geringere Präzedenz hat als die von `*` fliegen wir aus dieser heraus und es wird nur linke Teilbaum zurückgegeben. Das bedeutet nämlich, dass das momentane Token zum Operator in der oberen Ebene gehört.
 
 Wieder in der ersten Rekursionsebene angekommen haben wir also nun den Baum:
 - Links: One
 - Operator: noch nicht bestimmt
 - Rechts: Two
 
+Jetzt fehlt also nur noch der Operator zu bestimmen.
+Da wir diesen vorhin zwischgespeichert haben, können wir einfach über das Pattern-Matching den Ausdruck bauen und erhalten somit.
 
+- Links: One
+- Operator: Mult
+- Rechts: Two
+
+Diesen Baum setzen jetzt wiederum als linken Teilbaum.
+
+Da wir aber noch nich fertig sind, kommen wir mit der While-Schleife in die nächste Iterator und betrachten erneut Operator `+`, da diesen noch nicht consumt haben.
+
+Die Präzendent passt hier also wieder, da die nicht vorhandene Parent-Expression jetzt wieder Präzedenz 0 hat.
+Deswegen wird wieder der rechte Teilbaum bestimmt und wir erhalten.
+
+- Links: Mult(One, Two)
+- Operator noch nicht bestimmt
+- Rechts: Three
+
+Zu guter letzt wird nur der momentan betrachtete Operator gematcht, womit der fertige Baum so aussieht:
+
+- Links: Mult(One, Two)
+- Operator Plus
+- Rechts: Three
+
+Dieser wird als linker Teilbaum gesetzt, da wir aber keine Charakter mehr haben wird er auch einfach zurückgegeben und wir sind fertig.
 ## Expression Typcheck
 Diese Methode prüft den Datentyp eines Ausdrucks und gibt ein Ergebnis
 zurück. Wenn der ausdruck eine Zahl zwischen 0 und 9 ist, wird der Daten-

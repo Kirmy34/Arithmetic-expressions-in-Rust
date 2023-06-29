@@ -44,7 +44,7 @@ pub enum Expression {
 ```
 ## Evaluieren von Expressions
 Das Expression Enum beschreibt alle möglichen Ausdrücke, die wir verarbeiten
-können. Eine Variante jeweils für die Zahlen von 1-9. Sowie jeweils eine Variante
+können. Eine Variante jeweils für die Zahlen von 1 bis 9. Sowie jeweils eine Variante
 für true und false. Für die Operatoren Plus, Mult, Or und And gibt auch 
 jeweils eine Variante. Interessant ist hier, dass diese hier wieder Unterexpressionen
 verwalten. Ein mal für Rechts und ein mal für Links.
@@ -90,7 +90,7 @@ pub fn evaluate(&self) -> Option<Result<i32, bool>> {
 
 ```
 ### Evaluation von Plus-Expressions
-Als nächstes folgt das Pattern für eine Plus-Expression. Hier werden zunächst
+Als Nächstes folgt das Pattern für eine Plus-Expression. Hier werden zunächst
 beide Seiten der Plus-Expression evaluiert. Anschließend wird ein Pattern-Matching
 auf die beiden Ergebnisse angewendet. Wenn beide Ergebnisse Zahlenwerte 
 liefern `(Some(Ok(left value)))`, werden die beiden Werte von der linken und rechten
@@ -242,7 +242,7 @@ pub fn evaluate(&self) -> Option<Result<i32, bool>> {
 ```
 ## Beispiele für die Evaluation
 ### Beispiel 1
-Als kurzes Beispiel zur Erklärung der Funktionsweise des evaluaters sei die folgende Beispiel Expression 0 * (0 || 1) angenommen. Die wird in Rust folgendermaßen dargestellt: 
+Als kurzes Beispiel zur Erklärung der Funktionsweise der evaluate Funktion sei die folgende Beispielexpression 0 * (0 || 1) angenommen. Diese wird in Rust folgendermaßen dargestellt: 
 ```rs
 Mult(Box::new(Zero), Box::new(EOr(Box::new(Zero), Box::new(One))))
 ```
@@ -271,14 +271,14 @@ Self::Mult(left, right) => {
 },
 ```
 
-Aufgrund des in dieser Funktion verwendeten Pattern Matchings ist nur dieser Teil der evaluate Funktion relevant. Direkt nach dem das Mult Pattern erkannt wurde, wird dann geprüft, ob der linke Teil eine 0 ist, in diesem simplen Beispiel ist das tatsächlich der Fall, weshalb die evaluate Funktion direkt 0 zurückgibt. Eigentlich würde diese Expression sich nicht auswerten lassen, aufgrund der short circuit evaluation, welche zunächst den linken Teil auf eine 0 prüft, wird die Expression jedoch trotzdem ausgewertet und 0 als Ergebniss zurückgegeben.
+Aufgrund des in dieser Funktion verwendeten Pattern Matching ist nur dieser Teil der evaluate Funktion relevant. Direkt nach dem das Mult Pattern erkannt wurde, wird dann geprüft, ob der linke Teil eine 0 ist, in diesem simplen Beispiel ist das tatsächlich der Fall, weshalb die evaluate Funktion direkt 0 zurückgibt. Eigentlich würde diese Expression sich nicht auswerten lassen, aufgrund der short circuit evaluation, welche zunächst den linken Teil auf eine 0 prüft, wird die Expression jedoch trotzdem ausgewertet und 0 als Ergebnis zurückgegeben.
 
 ### Beispiel 2 
 Als ein zweites etwas anspruchsvolleres Beispiel wird nun die Expression 4 * (2 + 9) betrachtet. Als Rust Code wird diese Expression folgendermaßen dargestellt: 
 ```rs
 Mult(Box::new(Four), Box::new(Plus(Box::new(Two), Box::new(Nine))))
 ```
-Wenn diese nun evaluiert werden soll, wird zunächst die Mult Expression evaluiert. Hierzu kommt, das bereits in Beispiel 1 gezeigte Code Fragment zum Einsatz. Anders als im ersten Beispiel, ist in diesem Beispiel jedoch die linke Seite nicht 0, sondern eine 4. Deswegen muss hier auch noch die rechte Seite evaluiert werden. Beim Blick auf die rechte Seite, zeigt sich, dass es sich hierbei wiederrum um eine Expression handelt, jedoch eine Plus Expression.
+Wenn diese nun evaluiert werden soll, wird zunächst die Mult Expression evaluiert. Hierzu kommt, das bereits in Beispiel 1 gezeigte Code Fragment zum Einsatz. Anders als im ersten Beispiel, ist in diesem Beispiel jedoch die linke Seite nicht 0, sondern eine 4. Deswegen muss hier auch noch die rechte Seite evaluiert werden. Beim Blick auf die rechte Seite, zeigt sich, dass es sich hierbei wiederrum um eine Expression handelt, jedoch eine Plus-Expression.
 
 Der Code zur Auswertung einer Plus-Expression sieht folgendermaßen aus:
 ```rs
@@ -301,7 +301,7 @@ Self::Nine => Some(Ok(9)),
 
 Danach wird geprüft, ob die linke und rechte Seite zu Zahlen ausgewertet werden konnten, was hier der Fall ist. Um die Evaluierung der Plus Expression abzuschließen, werden die Zahlen der ausgewertete linken und rechten Seite addiert und dann als Zahl zurückgegeben.
 
-Nun liegen die linke und rechte Seite der Mult Expression ausgewertet vor. Nun wird hier im noch geprüft, ob beide Seiten eine Zahl sind, falls dies der Fall ist, werden die beiden Zahlen multipliziert und das Ergebniss als Zahl zurückgegeben. Damit ist die Evaluierung der Expression abgeschlossen und das Ergebniss der Auswertung kann an die aufrufende Funktion zurückgegeben werden.
+Nun liegen die linke und rechte Seite der Mult Expression ausgewertet vor. Nun wird hier im noch geprüft, ob beide Seiten eine Zahl sind, falls dies der Fall ist, werden die beiden Zahlen multipliziert und das Ergebnis als Zahl zurückgegeben. Damit ist die Evaluierung der Expression abgeschlossen und das Ergebnis der Auswertung kann an die aufrufende Funktion zurückgegeben werden.
 ## Parsen von Expressions
 Die Funktion, die das Parsen von Expression zuständig ist, funktioniert wie folgt.
 Sie bekommt einen String und ein Präzedenzlevel, um sich in der Rekursion zu
@@ -330,8 +330,7 @@ so lange, bis keine Characters mehr übrig sind.
 Diese Methode prüft den Datentyp eines Ausdrucks und gibt ein Ergebnis
 zurück. Wenn der ausdruck eine Zahl zwischen 0 und 9 ist, wird der Daten-
 typ TInt zurückgegeben. Wenn der Ausdruck ETrue oder EFalse ist, wird der
-Datentyp TBool zurückgegeben. Wenn der Ausdruck eine Addition, Multipli-
-kation, Logische-Oder oder logische Und-Operation ist, werden die Datentypen
+Datentyp TBool zurückgegeben. Wenn der Ausdruck eine Addition, Multiplikation, Logische-Oder oder logische Und-Operation ist, werden die Datentypen
 der linken und rechten Operanden überprüft. Wenn beide Operanden den richtigen Typ haben, wird TInt bzw. TBool zurückgegeben, andernfalls wird None
 zurückgegeben.
 

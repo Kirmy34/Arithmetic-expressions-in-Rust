@@ -6,7 +6,8 @@
 - Mario Occhinegro, ocma1013,
 
 ## Nutzung
-Um Expression einzulesen reicht es `cargo run` auszuführen.
+Um Expression einzulesen reicht es `cargo run` auszuführen. Zusätzlich werden hierbei zunächst einige Beispiel Expressions
+angezeigt und ausgewertet.
 
 Um sich die Tests anzuschauen führt man `cargo test` aus.
 

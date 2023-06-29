@@ -11,7 +11,7 @@ Um sich die Tests anzuschauen führt man `cargo test` aus.
 
 ## Datatype 
 Einfaches Enum zur Bestimmung der Art des Datentyps. 
-Wir haben Integeroder boolsche Werte
+Wir haben Integer oder boolsche Werte
 
 ## Expression Enum
 Einfaches Enum zur Bestimmung der Art des Datentyps. 

@@ -326,7 +326,74 @@ Diese berechnen wir rekursiv auf dem Rest des Iterables und dem momentanen
 Präzedenz-Operator. Falls der Unteraufruf den String nicht voll aufbraucht,
 springen wir wieder in die While-Schleife der höheren Rekursionsebene. Jetzt
 updaten wir den linken Teilbaum mit dem berechneten Ergebnis. Dies tun wir
-so lange, bis keine Characters mehr übrig sind.
+so lange, bis keine Characters mehr übrig sind
+```rs
+pub(crate) fn parse_expr<I>(chars: &mut std::iter::Peekable<I>, parent_precedence: usize) -> Option<Expression>
+where
+    I: Iterator<Item = char>,
+{
+    let token = parse_token(chars)?;
+
+    let mut lhs = Some(token);
+
+    while let Some(next_char) = chars.peek().copied() {
+        let precedence = operator_precedence(next_char);
+
+        if precedence <= parent_precedence {
+            break; // Current operator has lower precedence, stop parsing
+        }
+
+        chars.next(); // Consume the operator
+
+        let rhs = parse_expr(chars, precedence)?;
+
+        lhs = match next_char {
+            '+' => Some(Expression::Plus(Box::new(lhs.unwrap()), Box::new(rhs))),
+            '*' => Some(Expression::Mult(Box::new(lhs.unwrap()), Box::new(rhs))),
+            '&' => Some(Expression::EAnd(Box::new(lhs.unwrap()), Box::new(rhs))),
+            '|' => Some(Expression::EOr(Box::new(lhs.unwrap()), Box::new(rhs))),
+            _ => {
+                println!("ERROR: Invalid operator: {}", next_char);
+                return None;
+            }
+        };
+    }
+
+    lhs
+}
+```
+### Beispiel Parsing
+Hier ein kurzes Beispiel für die Parsung von `1*2+3`
+Die Funktion wird aufgerufen und der Character Iterator übergeben.
+Da immer nur ein Charakter betrachtet wird und wir am Anfang sind ist der zu betrachtende Charakter die `1`. Diesen Parsen für sich via `parse_token`.
+Somit erhalten wir die eine Int Expression mit dem Wert One. 
+Der Baum den wir uns bis jetzt gebaut haben sieht also wie folgt aus:
+- Links: One
+- Operator: noch nicht bestimmt
+- Rechts: noch nicht bestimmt
+
+
+Jetzt steigen wir in den While loop, schauen uns den nächsten Operator an und bestimmten seine Präzedenz.
+In diesem Fall also `*` mit Präzedenz 2.
+Da unser nicht vorhandene Parent die default Präzedenz von 0 hat und somit geringer als 2 ist gehen wir in der Schleife weiter, merken uns den Operator und consumen.
+
+Der nächste Schritt besteht darin die rechte Seite zu bestimmen.
+Dies geschieht durch den rekursiven Aufruf auf dem restlichen Char Itterable `2+3` und der Präzedenz von 2.
+
+Im Unteraufruf wird analog wie oben erstmal `2` geparst und als linke Seite des Baums festgelegt.
+Der Baum des Unteraufrufs sieht dann so aus.
+- Links: Two
+- Operator: noch nicht bestimmt
+- Rechts: noch nicht bestimmt
+
+Da unser Operator `+` aber eine geringere Präzedenz hat als die von `*` fliegen wir aus dieser heraus und es wird nur linke Teilbaum zurückgegeben.
+
+Wieder in der ersten Rekursionsebene angekommen haben wir also nun den Baum:
+- Links: One
+- Operator: noch nicht bestimmt
+- Rechts: Two
+
+
 ## Expression Typcheck
 Diese Methode prüft den Datentyp eines Ausdrucks und gibt ein Ergebnis
 zurück. Wenn der ausdruck eine Zahl zwischen 0 und 9 ist, wird der Daten-

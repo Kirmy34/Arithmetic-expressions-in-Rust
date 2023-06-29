@@ -133,7 +133,6 @@ Seite, die Zahlen der linken und rechten Seite multipliziert und zurückgegeben.
 pub fn evaluate(&self) -> Option<Result<i32, bool>> {
     match self {
         //other patterns
-
         Self::Mult(left, right) => {
             match left.as_ref(){
                 &Expression::Zero => Some(Ok(0)),
@@ -199,7 +198,6 @@ pub fn evaluate(&self) -> Option<Result<i32, bool>> {
     }
 }
 ```
-
 ### Evaluation von Und-Expressions
 Abschließend folgt das Pattern für die Und-Expression. Bei dieser wird ebenfalls
 zuerst die linke Seite der Expression ausgewertet, und auf dem Ergebnis dieser
@@ -215,6 +213,33 @@ rechte Teil ausgewertet und geprüft, ob die Auswertung einen Wahrheitswert
 ergibt. Wenn die Auswertung der rechten Seite einen booleschen Wert ergibt,
 wird dieser Wert als Ergebnis der Expression zurückgegeben, da der Wert der
 Expression nun nur noch von diesem abhängt.
+```rs
+pub fn evaluate(&self) -> Option<Result<i32, bool>> {
+    match self {
+        //other patterns
+        Self::EAnd(left, right) => {
+            let left_result = left.evaluate();
+            match left_result {
+                None => None, // Expression could not be evaluated
+                Some(Ok(_left_value)) => None, // got an int in logic eval
+                Some(Err(left_value)) => {
+                    match left_value {
+                        false => Some(Err(left_value)), // pass false to caller
+                        true => {
+                            let right_result = right.evaluate();
+                            match right_result {
+                                None => None, // Expression could not be evaluated
+                                Some(Ok(_right_value)) => None, // got an int in logic eval
+                                Some(Err(right_value)) => Some(Err(right_value)), // pass value to caller
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
 ## Parsen von Expressions
 Die Funktion, die das Parsen von Expression zuständig ist, funktioniert wie folgt.
 Sie bekommt einen String und ein Präzedenzlevel, um sich in der Rekursion zu

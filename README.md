@@ -14,17 +14,34 @@ Um sich die Tests anzuschauen führt man `cargo test` aus.
 Einfaches Enum zur Bestimmung der Art des Datentyps. 
 Wir haben Integer oder boolsche Werte
 ```rs
-#[derive(PartialEq)]
-#[derive(Debug)]
 pub enum DataTypes {
     TInt,
     TBool,
 }
 ```
-
 ## Expression Enum
 Einfaches Enum zur Bestimmung der Art des Datentyps. 
 Wir haben Integer oder boolsche Werte
+```rs
+pub enum Expression {
+    One,
+    Zero,
+    Two,
+    Three,
+    Four,
+    Five,
+    Six,
+    Seven,
+    Eight,
+    Nine,
+    ETrue,
+    EFalse,
+    Plus(Box<Expression>, Box<Expression>),
+    Mult(Box<Expression>, Box<Expression>),
+    EOr(Box<Expression>, Box<Expression>),
+    EAnd(Box<Expression>, Box<Expression>),
+}
+```
 ## Evaluieren von Expressions
 Das Expression Enum beschreibt alle möglichen Ausdrücke, die wir verarbeiten
 können. Eine Variante jeweils für die Zahlen von 1-9. Sowie jeweils eine Variante

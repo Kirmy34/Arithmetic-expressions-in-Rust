@@ -240,6 +240,70 @@ pub fn evaluate(&self) -> Option<Result<i32, bool>> {
     }
 }
 ```
+## Beispiel für eine Evaluation
+Als kurzes Beispiel zur Erklärung der Funktionsweise des evaluaters sei die folgende Beispiel Expression 0 * (0 || 1) angenommen. Die wird in Rust folgendermaßen dargestellt: 
+```rs
+Mult(Box::new(Zero), Box::new(EOr(Box::new(Zero), Box::new(One))))
+```
+Wenn nun die evaluate Funktion auf dieser Expression aufgerufen wird, wird diese Funktion auf der Mult Expression aufgerufen.
+
+```rs
+Self::Mult(left, right) => {
+    match left.as_ref(){
+    &Expression::Zero => Some(Ok(0)),
+     _ => {
+     let left_result = left.evaluate();
+                        match left_result {
+                            Some(Ok(0)) => Some(Ok(0)), // if left side is zero do not eval right side
+                            Some(Ok(left_value)) => {
+                                let right_result = right.evaluate();
+                                match right_result {
+                                    Some(Ok(0)) => Some(Ok(0)),
+                                    Some(Ok(right_value)) => Some(Ok(left_value * right_value)),
+                                    _ => None
+                                }
+                            }
+                            _ => None,
+                        }
+                    }
+                }
+            },
+```
+
+Aufgrund des in dieser Funktion verwendeten Pattern Matchings ist nur dieser Teil der evaluate Funktion relevant. Direkt nach dem das Mult Pattern erkannt wurde, wird dann geprüft, ob der linke Teil eine 0 ist, in diesem simplen Beispiel ist das tatsächlich der Fall, weshalb die evaluate Funktion direkt 0 zurückgibt. Eigentlich würde diese Expression sich nicht auswerten lassen, aufgrund der short circuit evaluation, welche zunächst den linken Teil auf eine 0 prüft, wird die Expression jedoch trotzdem ausgewertet und 0 als Ergebniss zurückgegeben.
+
+### Beispiel 2 evaluate
+
+Als ein zweites etwas anspruchsvolleres Beispiel wird nun die Expression 4 * (2 + 9) betrachtet. Als Rust Code wird diese Expression folgendermaßen dargestellt: 
+```rs
+Mult(Box::new(Four), Box::new(Plus(Box::new(Two), Box::new(Nine))))
+```
+Wenn diese nun evaluiert werden soll, wird zunächst die Mult Expression evaluiert. Hierzu kommt, das bereits in Beispiel 1 gezeigte Code Fragment zum Einsatz. Anders als im ersten Beispiel, ist in diesem Beispiel jedoch die linke Seite nicht 0, sondern eine 4. Deswegen muss hier auch noch die rechte Seite evaluiert werden. Beim Blick auf die rechte Seite, zeigt sich, dass es sich hierbei wiederrum um eine Expression handelt, jedoch eine Plus Expression.
+
+Der Code zur Auswertung einer Plus Expression sieht fogendermaßen aus:
+```rs
+Self::Mult(left, right) => {
+Self::Plus(left, right) => {
+                let left_result = left.evaluate();
+                let right_result = right.evaluate();
+                match (left_result, right_result) {
+                    (Some(Ok(left_value)), Some(Ok(right_value))) => Some(Ok(left_value + right_value)),
+                    (_, _) => None
+                }
+            },
+```
+Hier werden direkt die linke und die rechte Seite ausgewertet, da nun die rechte und die linke Seite Zahlen sind, werden diese mittels Pattern Matching erkannt und als Zahl zurückgegeben.
+
+```rs
+			Self::Two => Some(Ok(2)),
+            Self::Nine => Some(Ok(9)),
+```
+
+Danach wird geprüft, ob die linke und rechte Seite zu Zahlen ausgewertet werden konnten, was hier der Fall ist. Um die Evaluierung der Plus Expression abzuschliesen, werden die Zahlen der ausgewertete linken und rechten Seite addiert und dann als Zahl zurückgegeben.
+
+Nun liegen die linke und rechte Seite der Mult Expression ausgewertet vor. Nun wird hier im noch geprüft, ob beide Seiten eine Zahl sind, falls dies der Fall ist, werden die beiden Zahlen multipliziert und das Ergebniss als Zahl zurückgegeben. Damit ist die Evaluierung der Expression abgeschlossen und das Ergebniss der Auswertung kann an die aufrufende Funktion zurückgegeben werden.
+# Beispiele
+
 ## Parsen von Expressions
 Die Funktion, die das Parsen von Expression zuständig ist, funktioniert wie folgt.
 Sie bekommt einen String und ein Präzedenzlevel, um sich in der Rekursion zu

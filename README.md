@@ -8,7 +8,7 @@
 ## Nutzung
 In diesem Projekt ist es möglich beliebig viele eigene Ausdrücke einzugeben welche dann zunächst geparsed, typ-gecheckt und ausgewertet werden.
 Es werden nur natürliche Zahlen (`0-9`) sowie Boolische Werte (`true / false`) unterstüzt. Verknüpft können diese Werte durch folgende Operationen:
-Plus (`+`), Mal (`*`), Or (`| oder ||`) und And (`& oder &&`).
+`Plus (+)`, `Mal (*)`, `Or | oder ||)` und `And (& oder &&)`.
 Um Expression einzulesen reicht es `cargo run` auszuführen. Zusätzlich werden hierbei zunächst einige Beispiel Expressions
 angezeigt und ausgewertet.
 

@@ -6,6 +6,9 @@
 - Mario Occhinegro, ocma1013,
 
 ## Nutzung
+In diesem Projekt ist es möglich beliebig viele eigene Ausdrücke einzugeben welche dann zunächst geparsed, typ-gecheckt und ausgewertet werden.
+Es werden nur natürliche Zahlen (`0-9`) sowie Boolische Werte (`true / false`) unterstüzt. Verknüpft können diese Werte durch folgende Operationen:
+Plus (`+`), Mal (`*`), Or (`| oder ||`) und And (`& oder &&`).
 Um Expression einzulesen reicht es `cargo run` auszuführen. Zusätzlich werden hierbei zunächst einige Beispiel Expressions
 angezeigt und ausgewertet.
 
@@ -21,8 +24,8 @@ pub enum DataTypes {
 }
 ```
 ## Expression Enum
-Einfaches Enum zur Bestimmung der Art des Datentyps. 
-Wir haben Integer oder boolsche Werte
+Einfaches Enum zur Bestimmung und Strukturierung von Ausdrücken. 
+
 ```rs
 pub enum Expression {
     One,
@@ -49,6 +52,7 @@ können. Eine Variante jeweils für die Zahlen von 1 bis 9. Sowie jeweils eine V
 für true und false. Für die Operatoren Plus, Mult, Or und And gibt auch 
 jeweils eine Variante. Interessant ist hier, dass diese hier wieder Unterexpressionen
 verwalten. Ein mal für Rechts und ein mal für Links.
+
 ### Verwendung des Pattern-Matching zur Evaluation von Ausdrücken
 Um eine Expression zu evaluieren, wird das Pattern-Matching von Rust verwendet.
 Bezüglich des Rückgabetyps, ist zu beachten, dass aufgrund der Tatsache,
@@ -58,6 +62,7 @@ Möglichkeit, dass ein Ausdruck gar nicht evaluiert werden kann, weil eventuell
 eine nicht auflösbare Vermischung von logischen und mathematischen Ausdrücken
 vorkommt. Manche dieser vermischten Ausdrücke können jedoch aufgrund der
 Short-Circuit-Evaluation trotzdem ausgewertet werden.
+
 ### Rückgabetyp und Unterscheidung von Zahlen und logischen Werten
 Um nun den Rückgabewert der Evaluate-Funktion zu definieren, wir `Option <Result <i32, bool >> `gewählt, da mittels der Option, angegeben werden kann, ob überhaupt ein Wert zurückgegeben wird `(Some)`, oder ob die Auswertung gescheitert ist und kein Wert zurückgegeben werden kann (None). Um
 zwischen einer Zahl und einem logischen Wert zu unterscheiden, wird
@@ -65,7 +70,9 @@ zwischen einer Zahl und einem logischen Wert zu unterscheiden, wird
 und mittels `Err(logic)` ein logischer Wert zurückgegeben werden, dies wird für
 das Pattern-Matching benötigt, da es hierdurch einfacher wird, den Typ einer
 Evaluation zu matchen und zu erkennen.
+
 ## Evaluation von verschiedenen Ausdruckstypen
+
 ### Evaluation von Zahl-Expressions
 Um die eigentliche Evaluation durchzuführen, werden zunächst die Patterns für
 Expression angegeben, die nur eine Zahl enthalten. Das bedeutet, es werden
@@ -242,6 +249,7 @@ pub fn evaluate(&self) -> Option<Result<i32, bool>> {
 }
 ```
 ## Beispiele für die Evaluation
+
 ### Beispiel 1
 Als kurzes Beispiel zur Erklärung der Funktionsweise der evaluate Funktion sei die folgende Beispielexpression 0 * (0 || 1) angenommen. Diese wird in Rust folgendermaßen dargestellt: 
 ```rs
@@ -303,8 +311,9 @@ Self::Nine => Some(Ok(9)),
 Danach wird geprüft, ob die linke und rechte Seite zu Zahlen ausgewertet werden konnten, was hier der Fall ist. Um die Evaluierung der Plus Expression abzuschließen, werden die Zahlen der ausgewertete linken und rechten Seite addiert und dann als Zahl zurückgegeben.
 
 Nun liegen die linke und rechte Seite der Mult Expression ausgewertet vor. Nun wird hier im noch geprüft, ob beide Seiten eine Zahl sind, falls dies der Fall ist, werden die beiden Zahlen multipliziert und das Ergebnis als Zahl zurückgegeben. Damit ist die Evaluierung der Expression abgeschlossen und das Ergebnis der Auswertung kann an die aufrufende Funktion zurückgegeben werden.
+
 ## Parsen von Expressions
-Die Funktion, die das Parsen von Expression zuständig ist, funktioniert wie folgt.
+Die Funktion, die für das Parsen von Expression zuständig ist, funktioniert wie folgt.
 Sie bekommt einen String und ein Präzedenzlevel, um sich in der Rekursion zu
 merken was die Präzedenz der Parent-Expression ist. Die Ausgabe ist dann
 ein Expression-Enum, das die eingegebene Expression beschreibt. Innerhalb des

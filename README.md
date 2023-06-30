@@ -503,7 +503,7 @@ Der Ablauf der Typüberprüfung ist wie folgt:
 4. Schließlich wird das Ergebnis Some(Ok(TInt)) von der type_check()-Funktion des Gesamtausdrucks zurückgegeben.
 
 
-#### Beispiele kein valider Typ:
+#### Beispiel kein valider Typ:
 Hier ein Beispiel zur Erkennung, falls ein Typ nicht gültig ist. Hier im Fall von 
 ` Expression::Plus(
         Box::new(Expression::Two),

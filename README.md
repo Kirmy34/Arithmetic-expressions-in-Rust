@@ -488,7 +488,34 @@ impl Expression {
 }
 ```
 
-### Beispiel Typechecker
+### Beispiele Typechecker
+#### Beispiel erfolgreiche Bestimmung:
+Hier eine kurze Erklärung am Beispiel  von
+ `Expression::Plus(
+        Box::new(Expression::Two),
+        Box::new(Expression::Five)
+    )`
+
+Der Ablauf der Typüberprüfung ist wie folgt:
+1. Die Plus-Variante wird erreicht, und die type_check()-Funktion wird für die beiden Operanden (Two und Five) aufgerufen.
+2. Für beide Operanden wird Some(Ok(TInt)) zurückgegeben, da sie den erwarteten Typ TInt (Integer) haben.
+3. Da sowohl der linke als auch der rechte Operand den erwarteten Typ haben, wird Some(Ok(TInt)) als Ergebnis der Plus-Variante zurückgegeben.
+4. Schließlich wird das Ergebnis Some(Ok(TInt)) von der type_check()-Funktion des Gesamtausdrucks zurückgegeben.
+
+
+#### Beispiele kein valider Typ:
+Hier ein Beispiel zur Erkennung, falls ein Typ nicht gültig ist. Hier im Fall von 
+` Expression::Plus(
+        Box::new(Expression::Two),
+        Box::new(Expression::ETrue)
+    )`
+
+Der Ablauf der Typüberprüfung ist wie folgt:
+1. Die Plus-Variante wird erreicht, und die type_check()-Funktion wird für die beiden Operanden (Two und ETrue) aufgerufen.
+2. Für den linken Operanden (Two) wird Some(Ok(TInt)) zurückgegeben, da er den erwarteten Typ TInt (Integer) hat.
+3. Für den rechten Operanden (ETrue) wird Some(Err(TBool)) zurückgegeben, da er nicht den erwarteten Typ TInt, sondern den unerwarteten Typ TBool (Boolescher Wert) hat.
+4. Da der rechte Operand den erwarteten Typ nicht hat, wird None als Ergebnis der Plus-Variante zurückgegeben.
+5. Schließlich wird das Ergebnis None von der type_check()-Funktion des Gesamtausdrucks zurückgegeben.
 
 
 ## Vergleich zur Haskell

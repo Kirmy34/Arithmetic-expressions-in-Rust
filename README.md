@@ -1,7 +1,7 @@
 # Arithmetische Ausdrücke in Rust
 
 ## Team Members
-- Heck Jonas, hejo1042,
+- Jonas Heck, hejo1042,
 - Michael Kirmizakis, kimi1020,
 - Mario Occhinegro, ocma1013,
 
@@ -520,4 +520,5 @@ Der Ablauf der Typüberprüfung ist wie folgt:
 
 ## Vergleich zur Haskell
 ### Evaluator
+
 ### Typchecker

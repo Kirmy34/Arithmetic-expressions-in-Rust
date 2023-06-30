@@ -435,3 +435,62 @@ Datentyp TBool zurückgegeben. Wenn der Ausdruck eine Addition, Multiplikation, 
 der linken und rechten Operanden überprüft. Wenn beide Operanden den richtigen Typ haben, wird TInt bzw. TBool zurückgegeben, andernfalls wird None
 zurückgegeben.
 
+```rs
+impl Expression {
+    pub fn type_check(&self) -> Option<Result<DataTypes, DataTypes>> {
+        match self {
+            Self::Zero => Some(Ok(TInt)),
+            Self::One => Some(Ok(TInt)),
+            Self::Two => Some(Ok(TInt)),
+            Self::Three => Some(Ok(TInt)),
+            Self::Four => Some(Ok(TInt)),
+            Self::Five => Some(Ok(TInt)),
+            Self::Six => Some(Ok(TInt)),
+            Self::Seven => Some(Ok(TInt)),
+            Self::Eight => Some(Ok(TInt)),
+            Self::Nine => Some(Ok(TInt)),
+            Self::ETrue => Some(Err(TBool)),
+            Self::EFalse => Some(Err(TBool)),
+            Self::Plus(left, right) => {
+                let left_result = left.type_check();
+                let right_result = right.type_check();
+                match (left_result, right_result) {
+                    (Some(Ok(_left_value)), Some(Ok(_right_value))) => Some(Ok(TInt)),
+                    (_, _) => None
+                }
+            }
+            Self::Mult(left, right) => {
+                let left_result = left.type_check();
+                let right_result = right.type_check();
+                match (left_result, right_result) {
+                    (Some(Ok(_left_value)), Some(Ok(_right_value))) => Some(Ok(TInt)),
+                    (_, _) => None
+                }
+            }
+            Self::EOr(left, right) => {
+                let left_result = left.type_check();
+                let right_result = right.type_check();
+                match (left_result, right_result) {
+                    (Some(Err(_left_value)), Some(Err(_right_value))) => Some(Err(TBool)),
+                    (_, _) => None
+                }
+            }
+            Self::EAnd(left, right) => {
+                let left_result = left.type_check();
+                let right_result = right.type_check();
+                match (left_result, right_result) {
+                    (Some(Err(_left_value)), Some(Err(_right_value))) => Some(Err(TBool)),
+                    (_, _) => None
+                }
+            }
+        }
+    }
+}
+```
+
+### Beispiel Typechecker
+
+
+## Vergleich zur Haskell
+### Evaluator
+### Typchecker

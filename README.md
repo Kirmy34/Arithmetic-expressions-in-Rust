@@ -8,7 +8,7 @@
 ## Nutzung
 In diesem Projekt ist es möglich beliebig viele eigene Ausdrücke einzugeben welche dann zunächst geparsed, typ-gecheckt und ausgewertet werden.
 Es werden nur natürliche Zahlen (`0-9`) sowie Boolische Werte (`true / false`) unterstüzt. Verknüpft können diese Werte durch folgende Operationen:
-`Plus (+)`, `Mal (*)`, `Or | oder ||)` und `And (& oder &&)`.
+`Plus (+)`, `Mal (*)`, `Or (| oder ||)` und `And (& oder &&)`.
 Um Expression einzulesen reicht es `cargo run` auszuführen. Zusätzlich werden hierbei zunächst einige Beispiel Expressions
 angezeigt und ausgewertet.
 
@@ -490,7 +490,7 @@ impl Expression {
 
 ### Beispiele Typechecker
 #### Beispiel erfolgreiche Bestimmung:
-Hier eine kurze Erklärung am Beispiel  von
+Hier eine kurze Erklärung am Beispiel von  
  `Expression::Plus(
         Box::new(Expression::Two),
         Box::new(Expression::Five)
@@ -504,7 +504,7 @@ Der Ablauf der Typüberprüfung ist wie folgt:
 
 
 #### Beispiel kein valider Typ:
-Hier ein Beispiel zur Erkennung, falls ein Typ nicht gültig ist. Hier im Fall von 
+Hier ein Beispiel zur Erkennung, falls ein Typ nicht gültig ist. Hier im Fall von  
 ` Expression::Plus(
         Box::new(Expression::Two),
         Box::new(Expression::ETrue)
@@ -519,19 +519,11 @@ Der Ablauf der Typüberprüfung ist wie folgt:
 
 
 ## Vergleich zu Haskell
-Rust:
-Vorteile
-Nachteile
-Komplexere Syntax mit Option und Restult (Err, Ok)
 
-Haskell:
-Vorteile
-Kompaktere Syntax
-Typsichere Auswertung mit kompaktem maybe und either
-Nachteile
-Dynamische Auswertung führt => evtl Laufzeitfehler
 ### Rust
 #### Vorteile
+- sehr gute Performance
+- Fehler zur Laufzeit nahezu ausgeschlossen, wegen der Überprüfung bei der Kompilierung
 - Die Fehlerbahandlung ist dank `Result` und `Option` sehr präzise.
 
 #### Nachteile

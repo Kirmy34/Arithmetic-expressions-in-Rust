@@ -1,4 +1,4 @@
-use crate::{expression::Expression};
+use crate::expression::Expression;
 
 impl Expression {
     pub fn evaluate(&self) -> Option<Result<i32, bool>> {
@@ -19,12 +19,14 @@ impl Expression {
                 let left_result = left.evaluate();
                 let right_result = right.evaluate();
                 match (left_result, right_result) {
-                    (Some(Ok(left_value)), Some(Ok(right_value))) => Some(Ok(left_value + right_value)),
-                    (_, _) => None
+                    (Some(Ok(left_value)), Some(Ok(right_value))) => {
+                        Some(Ok(left_value + right_value))
+                    }
+                    (_, _) => None,
                 }
-            },
+            }
             Self::Mult(left, right) => {
-                match left.as_ref(){
+                match left.as_ref() {
                     &Expression::Zero => Some(Ok(0)),
                     _ => {
                         let left_result = left.evaluate();
@@ -35,18 +37,18 @@ impl Expression {
                                 match right_result {
                                     Some(Ok(0)) => Some(Ok(0)),
                                     Some(Ok(right_value)) => Some(Ok(left_value * right_value)),
-                                    _ => None
+                                    _ => None,
                                 }
                             }
                             _ => None,
                         }
                     }
                 }
-            },
+            }
             Self::EOr(left, right) => {
                 let left_result = left.evaluate();
                 match left_result {
-                    None => None, // Expression could not be evaluated
+                    None => None,                       // Expression could not be evaluated
                     Some(Ok(_left_value)) => None, // got an int in logic eval
                     Some(Err(left_value)) => {
                         match left_value {
@@ -54,19 +56,19 @@ impl Expression {
                             false => {
                                 let right_result = right.evaluate();
                                 match right_result {
-                                    None => None, // Expression could not be evaluated
-                                    Some(Ok(_right_value)) => None, // got an int in logic eval
-                                    Some(Err(right_value)) => Some(Err(right_value)), // pass value to caller
+                                    None => None,                                            // Expression could not be evaluated
+                                    Some(Ok(_right_value)) => None,                     // got an int in logic eval
+                                    Some(Err(right_value)) => Some(Err(right_value)),  // pass value to caller
                                 }
                             }
                         }
                     }
                 }
-            },
+            }
             Self::EAnd(left, right) => {
                 let left_result = left.evaluate();
                 match left_result {
-                    None => None, // Expression could not be evaluated
+                    None => None,                       // Expression could not be evaluated
                     Some(Ok(_left_value)) => None, // got an int in logic eval
                     Some(Err(left_value)) => {
                         match left_value {
@@ -74,8 +76,8 @@ impl Expression {
                             true => {
                                 let right_result = right.evaluate();
                                 match right_result {
-                                    None => None, // Expression could not be evaluated
-                                    Some(Ok(_right_value)) => None, // got an int in logic eval
+                                    None => None,                                           // Expression could not be evaluated
+                                    Some(Ok(_right_value)) => None,                    // got an int in logic eval
                                     Some(Err(right_value)) => Some(Err(right_value)), // pass value to caller
                                 }
                             }
@@ -94,11 +96,15 @@ mod test {
 
     #[test]
     fn run_all_tests() {
-        let results = ExampleExpressions::iterator().zip(ExampleExpressionsEvaluateResults::get_evaluate_values());
+        let results = ExampleExpressions::iterator()
+            .zip(ExampleExpressionsEvaluateResults::get_evaluate_values());
         for (expression, result) in results {
             let initialized_expression: Expression = expression.init();
             let initialized_result = result.init();
-            println!("run evaluate test for expression: {}", initialized_expression.show());
+            println!(
+                "run evaluate test for expression: {}",
+                initialized_expression.show()
+            );
             assert_eq!(initialized_expression.evaluate(), initialized_result);
         }
     }

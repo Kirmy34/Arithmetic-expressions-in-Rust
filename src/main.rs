@@ -88,6 +88,18 @@ fn format_input(input: &str) -> String {
     result
 }
 
+fn parse_expression(input: &str) -> Option<Expression> {
+    let mut chars = input.chars().peekable();
+    let expression = expression_parse::parse_expr(&mut chars, 0)?;
+
+    if chars.next().is_some() {
+        println!("ERROR: Unexpected end of input");
+        return None;
+    }
+
+    Some(expression)
+}
+
 fn evaluate_a_given_expression(expression: &Expression) -> String {
     match expression.evaluate() {
         None => String::from("undefined"),
@@ -102,16 +114,4 @@ fn type_check_a_given_expression(expression: &Expression) -> String {
         Some(Ok(value)) => value.show(),
         Some(Err(value)) => value.show(),
     }
-}
-
-fn parse_expression(input: &str) -> Option<Expression> {
-    let mut chars = input.chars().peekable();
-    let expression = expression_parse::parse_expr(&mut chars, 0)?;
-
-    if chars.next().is_some() {
-        println!("ERROR: Unexpected end of input");
-        return None;
-    }
-
-    Some(expression)
 }

@@ -1,12 +1,14 @@
 use crate::expression::Expression;
 
-pub(crate) fn parse_expr<I>(chars: &mut std::iter::Peekable<I>, parent_precedence: usize) -> Option<Expression>
+pub(crate) fn parse_expr<I>(
+    chars: &mut std::iter::Peekable<I>,
+    parent_precedence: usize,
+) -> Option<Expression>
 where
     I: Iterator<Item = char>,
 {
     let token = parse_token(chars)?;
-
-    let mut lhs = Some(token);
+    let mut left = Some(token);
 
     while let Some(next_char) = chars.peek().copied() {
         let precedence = operator_precedence(next_char);
@@ -17,28 +19,26 @@ where
 
         chars.next(); // Consume the operator
 
-        let rhs = parse_expr(chars, precedence)?;
+        let right = parse_expr(chars, precedence)?;
 
-        lhs = match next_char {
-            '+' => Some(Expression::Plus(Box::new(lhs.unwrap()), Box::new(rhs))),
-            '*' => Some(Expression::Mult(Box::new(lhs.unwrap()), Box::new(rhs))),
-            '&' => Some(Expression::EAnd(Box::new(lhs.unwrap()), Box::new(rhs))),
-            '|' => Some(Expression::EOr(Box::new(lhs.unwrap()), Box::new(rhs))),
+        left = match next_char {
+            '+' => Some(Expression::Plus(Box::new(left.unwrap()), Box::new(right))),
+            '*' => Some(Expression::Mult(Box::new(left.unwrap()), Box::new(right))),
+            '&' => Some(Expression::EAnd(Box::new(left.unwrap()), Box::new(right))),
+            '|' => Some(Expression::EOr(Box::new(left.unwrap()), Box::new(right))),
             _ => {
                 println!("ERROR: Invalid operator: {}", next_char);
                 return None;
             }
         };
     }
-
-    lhs
+    left
 }
 
 fn parse_token<I>(chars: &mut std::iter::Peekable<I>) -> Option<Expression>
 where
     I: Iterator<Item = char>,
 {
-    // skip_whitespaces(chars);
     let c = chars.next()?;
 
     match c {
@@ -53,7 +53,9 @@ where
         '8' => Some(Expression::Eight),
         '9' => Some(Expression::Nine),
         't' => {
-            if chars.next() == Some('r') && chars.next() == Some('u') && chars.next() == Some('e') {
+            if chars.next() == Some('r')
+                && chars.next() == Some('u')
+                && chars.next() == Some('e') {
                 Some(Expression::ETrue)
             } else {
                 println!("ERROR: Typo in 'true'");
@@ -83,7 +85,7 @@ where
         }
         _ => {
             println!("ERROR: Invalid Character {}", c);
-            None // Invalid character
+            None
         }
     }
 }

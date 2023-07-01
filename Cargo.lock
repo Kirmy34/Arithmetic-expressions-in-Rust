@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "Arithmetic-expressions-in-Rust"
+name = "arithmetic_expressions_in_rust"
 version = "0.1.0"

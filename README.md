@@ -518,7 +518,32 @@ Der Ablauf der Typüberprüfung ist wie folgt:
 5. Schließlich wird das Ergebnis None von der type_check()-Funktion des Gesamtausdrucks zurückgegeben.
 
 
-## Vergleich zur Haskell
-### Evaluator
+## Vergleich zu Haskell
+Rust:
+Vorteile
+Nachteile
+Komplexere Syntax mit Option und Restult (Err, Ok)
 
-### Typchecker
+Haskell:
+Vorteile
+Kompaktere Syntax
+Typsichere Auswertung mit kompaktem maybe und either
+Nachteile
+Dynamische Auswertung führt => evtl Laufzeitfehler
+### Rust
+#### Vorteile
+- Die Fehlerbahandlung ist dank `Result` und `Option` sehr präzise.
+
+#### Nachteile
+- Rust hat einen verboseren Syntax, da wir bspw. mit Option und Result arbeiten müssen um das gewollte Verhalten zu implementieren. Darunter leidet die Leserlichkeit des Codes.
+- Das Pattern-Matching wird bei großer Schachtelung sehr unübersichtlich.
+- Komplexität bei Implementierung, höher aufgrund von Immutabilität und Borrow Checker
+
+### Haskell
+#### Vorteile
+- Kompakterer Code, vorallem beim Pattern-Matching
+- Dank, des Garbage Collectors müssen wir uns beim Programmieren keine Gedanken um Speicher machen.
+- Durch Lazy Evaluation werden Ausdrücke erst ausgewertet wenn ihr Wert benötigt wird. Das führt zu höherer Performance bei sehr großen Ausdrücken
+
+#### Nachteile
+- Performance schlechter als bei Rust
